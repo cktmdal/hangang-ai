@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마할라노비스 거리 설명</title>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; background-color: #f9fafb; }
+        .popup { position: fixed; background-color: #374151; color: white; padding: 8px 12px; border-radius: 6px; font-size: 0.9em; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 1000; pointer-events: none; transition: opacity 0.3s ease; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const MahalanobisDemo = () => {
+            const avgHeight = 160, avgWeight = 52;
+            const [showPopup, setShowPopup] = useState(false);
+            const [popupPos, setPopupPos] = useState({x:0, y:0});
+            
+            const generateData = () => {
+                const data = [];
+                for (let i = 0; i < 50; i++) {
+                    const height = avgHeight + (Math.random() - 0.5) * 16;
+                    const weight = avgWeight + (height - avgHeight) * 0.4 + (Math.random() - 0.5) * 10;
+                    data.push({ height: Math.round(height * 10) / 10, weight: Math.round(weight * 10) / 10 });
+                }
+                return data;
+            };
+
+            const [data] = useState(generateData);
+            const [selectedPoint, setSelectedPoint] = useState({ height: 165, weight: 55 });
+            const [mahDistance, setMahDistance] = useState(0);
+            const [eucDistance, setEucDistance] = useState(0);
+            const [showCircles, setShowCircles] = useState(true);
+            const [viewMode, setViewMode] = useState('aspect');
+            const [hoveredPoint, setHoveredPoint] = useState(null);
+            
+            const outlierA = { height: 170, weight: 45 };
+            const outlierB = { height: 155, weight: 65 };
+            const [mahDistanceA, setMahDistanceA] = useState(0);
+            const [mahDistanceB, setMahDistanceB] = useState(0);
+            const [eucDistanceA, setEucDistanceA] = useState(0);
+            const [eucDistanceB, setEucDistanceB] = useState(0);
+
+            const calculateCovariance = (data) => {
+                const n = data.length;
+                const meanH = data.reduce((s, d) => s + d.height, 0) / n;
+                const meanW = data.reduce((s, d) => s + d.weight, 0) / n;
+                let varH = 0, varW = 0, covHW = 0;
+                data.forEach(d => {
+                    const dh = d.height - meanH, dw = d.weight - meanW;
+                    varH += dh * dh; varW += dw * dw; covHW += dh * dw;
+                });
+                return { varH: varH/n, varW: varW/n, covHW: covHW/n, meanH, meanW, stdH: Math.sqrt(varH/n), stdW: Math.sqrt(varW/n) };
+            };
+
+            const calculateMahalanobis = (point, stats) => {
+                const dh = point.height - stats.meanH, dw = point.weight - stats.meanW;
+                const det = stats.varH * stats.varW - stats.covHW * stats.covHW;
+                const invVarH = stats.varW / det, invVarW = stats.varH / det, invCovHW = -stats.covHW / det;
+                return Math.sqrt(dh*dh*invVarH + dw*dw*invVarW + 2*dh*dw*invCovHW);
+            };
+
+            const calculateEuclidean = (point, stats) => Math.sqrt(Math.pow(point.height - stats.meanH, 2) + Math.pow(point.weight - stats.meanW, 2));
+
+            const normalizeData = (data, stats) => data.map(d => ({
+                height: (d.height - stats.meanH) / stats.stdH,
+                weight: (d.weight - stats.meanW) / stats.stdW,
+                originalHeight: d.height, originalWeight: d.weight
+            }));
+
+            const generateEllipse = (stats, distance, normalized = false) => {
+                const points = [];
+                const det = stats.varH * stats.varW - stats.covHW * stats.covHW;
+                const invVarH = stats.varW / det, invVarW = stats.varH / det, invCovHW = -stats.covHW / det;
+                for (let i = 0; i <= 100; i++) {
+                    const angle = (i / 100) * 2 * Math.PI;
+                    const cos = Math.cos(angle), sin = Math.sin(angle);
+                    const scale = distance / Math.sqrt(invVarH*cos*cos + invVarW*sin*sin + 2*invCovHW*cos*sin);
+                    const h = stats.meanH + scale * cos, w = stats.meanW + scale * sin;
+                    points.push(normalized ? { height: (h - stats.meanH) / stats.stdH, weight: (w - stats.meanW) / stats.stdW } : { height: h, weight: w });
+                }
+                return points;
+            };
+
+            const generateCircle = (stats, radius, normalized = false) => {
+                const points = [];
+                for (let i = 0; i <= 100; i++) {
+                    const angle = (i / 100) * 2 * Math.PI;
+                    if (normalized) {
+                        const normR = Math.sqrt(Math.pow((selectedPoint.height - stats.meanH) / stats.stdH, 2) + Math.pow((selectedPoint.weight - stats.meanW) / stats.stdW, 2));
+                        points.push({ height: normR * Math.cos(angle), weight: normR * Math.sin(angle) });
+                    } else {
+                        points.push({ height: stats.meanH + radius * Math.cos(angle), weight: stats.meanW + radius * Math.sin(angle) });
+                    }
+                }
+                return points;
+            };
+
+            const stats = calculateCovariance(data);
+
+            useEffect(() => {
+                setMahDistance(calculateMahalanobis(selectedPoint, stats));
+                setEucDistance(calculateEuclidean(selectedPoint, stats));
+                setMahDistanceA(calculateMahalanobis(outlierA, stats));
+                setEucDistanceA(calculateEuclidean(outlierA, stats));
+                setMahDistanceB(calculateMahalanobis(outlierB, stats));
+                setEucDistanceB(calculateEuclidean(outlierB, stats));
+            }, [selectedPoint, data]);
+
+            const getColor = (mah) => mah < 1 ? '#22c55e' : mah < 2 ? '#eab308' : mah < 3 ? '#f97316' : '#ef4444';
+
+            const handleTargetClick = (e) => {
+                const rect = e.target.getBoundingClientRect();
+                setPopupPos({ x: rect.left + 20, y: rect.bottom + 5 });
+                setShowPopup(true);
+                setTimeout(() => setShowPopup(false), 800);
+            };
+
+            const SVGChart = ({ normalized = false }) => {
+                const width = 580, height = 480, padding = 60;
+                let minH, maxH, minW, maxW, displayData, displaySelected, displayMean;
+
+                if (normalized) {
+                    minH = -4; maxH = 4; minW = -4; maxW = 4;
+                    displayData = normalizeData(data, stats);
+                    displaySelected = { height: (selectedPoint.height - stats.meanH) / stats.stdH, weight: (selectedPoint.weight - stats.meanW) / stats.stdW };
+                    displayMean = { height: 0, weight: 0 };
+                } else {
+                    minH = 145; maxH = 175; minW = 35; maxW = 70;
+                    displayData = data;
+                    displaySelected = selectedPoint;
+                    displayMean = { height: stats.meanH, weight: stats.meanW };
+                }
+
+                const rangeH = maxH - minH, rangeW = maxW - minW;
+                const chartWidth = width - 2 * padding, chartHeight = height - 2 * padding;
+                let scaleX, scaleY;
+                if (normalized) {
+                    const scale = Math.min(chartWidth / rangeH, chartHeight / rangeW);
+                    scaleX = scale; scaleY = scale;
+                } else {
+                    scaleX = chartWidth / rangeH; scaleY = chartHeight / rangeW;
+                }
+                const centerX = width / 2, centerY = height / 2;
+                const toX = (h) => centerX + (h - (minH + maxH) / 2) * scaleX;
+                const toY = (w) => centerY - (w - (minW + maxW) / 2) * scaleY;
+
+                const ellipsePaths = [1, 2, 3].map(d => generateEllipse(stats, d, normalized).map((p, i) => `${i === 0 ? 'M' : 'L'} ${toX(p.height)} ${toY(p.weight)}`).join(' ') + ' Z');
+                const circlePath = generateCircle(stats, eucDistance, normalized).map((p, i) => `${i === 0 ? 'M' : 'L'} ${toX(p.height)} ${toY(p.weight)}`).join(' ') + ' Z';
+
+                return (
+                    <svg viewBox={`0 0 ${width} ${height}`} style={{width: '100%', maxWidth: width, height: 'auto', border: '1px solid #d1d5db', backgroundColor: 'white'}}>
+                        <defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e5e7eb" strokeWidth="0.5"/></pattern></defs>
+                        <rect x={padding} y={padding} width={chartWidth} height={chartHeight} fill="url(#grid)"/>
+                        {showCircles && ellipsePaths.map((path, i) => <path key={i} d={path} fill="none" stroke="#8b5cf6" strokeWidth="2" strokeDasharray="5,5"/>)}
+                        {showCircles && <path d={circlePath} fill="none" stroke="#ef4444" strokeWidth="2"/>}
+                        {displayData.map((d, i) => (
+                            <circle key={i} cx={toX(d.height)} cy={toY(d.weight)} r="4" fill="#8884d8" opacity="0.6"
+                                onMouseEnter={() => setHoveredPoint({ height: data[i].height, weight: data[i].weight, x: toX(d.height), y: toY(d.weight) })}
+                                onMouseLeave={() => setHoveredPoint(null)} style={{cursor: 'pointer'}}/>
+                        ))}
+                        <g transform={`translate(${toX(displayMean.height)}, ${toY(displayMean.weight)})`}>
+                            <line x1="-8" y1="0" x2="8" y2="0" stroke="#22c55e" strokeWidth="3"/>
+                            <line x1="0" y1="-8" x2="0" y2="8" stroke="#22c55e" strokeWidth="3"/>
+                        </g>
+                        <g transform={`translate(${toX(displaySelected.height)}, ${toY(displaySelected.weight)})`}>
+                            <polygon points="0,-10 -8,8 8,8" fill="#ef4444"/>
+                        </g>
+                        <g transform={`translate(${toX(normalized ? (outlierA.height - stats.meanH) / stats.stdH : outlierA.height)}, ${toY(normalized ? (outlierA.weight - stats.meanW) / stats.stdW : outlierA.weight)})`}>
+                            <circle r="8" fill="#ff6b6b" stroke="white" strokeWidth="2"/><text y="4" textAnchor="middle" fontSize="10" fontWeight="bold" fill="white">A</text>
+                        </g>
+                        <g transform={`translate(${toX(normalized ? (outlierB.height - stats.meanH) / stats.stdH : outlierB.height)}, ${toY(normalized ? (outlierB.weight - stats.meanW) / stats.stdW : outlierB.weight)})`}>
+                            <circle r="8" fill="#4ecdc4" stroke="white" strokeWidth="2"/><text y="4" textAnchor="middle" fontSize="10" fontWeight="bold" fill="white">B</text>
+                        </g>
+                        <text x={width/2} y={height - 15} textAnchor="middle" fontSize="14">{normalized ? '키 (정규화)' : '키 (cm)'}</text>
+                        <text x="20" y={height/2} textAnchor="middle" fontSize="14" transform={`rotate(-90, 20, ${height/2})`}>{normalized ? '몸무게 (정규화)' : '몸무게 (kg)'}</text>
+                        {!normalized && [145, 155, 165, 175].map(h => <g key={h}><line x1={toX(h)} y1={height-padding} x2={toX(h)} y2={height-padding+5} stroke="black"/><text x={toX(h)} y={height-padding+20} textAnchor="middle" fontSize="12">{h}</text></g>)}
+                        {!normalized && [40, 50, 60, 70].map(w => <g key={w}><line x1={padding-5} y1={toY(w)} x2={padding} y2={toY(w)} stroke="black"/><text x={padding-10} y={toY(w)+5} textAnchor="end" fontSize="12">{w}</text></g>)}
+                        {normalized && [-4, -2, 0, 2, 4].map(h => <g key={h}><line x1={toX(h)} y1={height-padding} x2={toX(h)} y2={height-padding+5} stroke="black"/><text x={toX(h)} y={height-padding+20} textAnchor="middle" fontSize="12">{h}</text></g>)}
+                        {normalized && [-4, -2, 0, 2, 4].map(w => <g key={w}><line x1={padding-5} y1={toY(w)} x2={padding} y2={toY(w)} stroke="black"/><text x={padding-10} y={toY(w)+5} textAnchor="end" fontSize="12">{w}</text></g>)}
+                        <g transform={`translate(${width - 100}, 60)`}>
+                            <circle cx="0" cy="0" r="4" fill="#8884d8"/><text x="10" y="5" fontSize="11">학생들</text>
+                            <polygon points="0,10 -6,24 6,24" fill="#ef4444" transform="translate(0, 4)"/><text x="10" y="25" fontSize="11">선택</text>
+                            <line x1="-6" y1="40" x2="6" y2="40" stroke="#22c55e" strokeWidth="2"/>
+			    <line x1="0" y1="34" x2="0" y2="46" stroke="#22c55e" strokeWidth="2"/>
+			    <text x="10" y="45" fontSize="11">평균</text>
+                            <circle cx="0" cy="60" r="6" fill="#ff6b6b" stroke="white" strokeWidth="1.5"/><text x="10" y="65" fontSize="11">이상치 A</text>
+                            <circle cx="0" cy="80" r="6" fill="#4ecdc4" stroke="white" strokeWidth="1.5"/><text x="10" y="85" fontSize="11">이상치 B</text>
+                        </g>
+                        {hoveredPoint && (
+                            <g transform={`translate(${hoveredPoint.x}, ${hoveredPoint.y - 20})`}>
+                                <rect x="-40" y="-25" width="80" height="20" fill="white" stroke="#333" strokeWidth="1" rx="3"/>
+                                <text x="0" y="-10" textAnchor="middle" fontSize="11" fontWeight="bold">{hoveredPoint.height}cm, {hoveredPoint.weight}kg</text>
+                            </g>
+                        )}
+                    </svg>
+                );
+            };
+
+            return (
+                <div className="p-4 max-w-6xl mx-auto bg-white">
+                    {showPopup && <div className="popup" style={{left: popupPos.x, top: popupPos.y, opacity: 1}}>참새다!</div>}
+                    
+                    <div className="mb-6">
+                        <div className="text-blue-600 text-sm mb-1">인공지능기초 학습자료</div>
+                        <h2 className="text-2xl font-bold mb-2 text-blue-600">마할라노비스 거리란 무엇일까요?</h2>
+                        <p className="text-gray-700 mb-3">마할라노비스 거리는 어떤 데이터가 전체 그룹에서 얼마나 "특이한지"를 알려주는 거리예요. 일반적인 거리와 다르게, 데이터의 패턴을 고려해서 계산합니다.</p>
+                        <div className="bg-blue-100 border-l-4 border-blue-500 p-3 mb-3">
+                            <p className="text-sm text-gray-800"><strong>💡 왜 필요할까요?</strong><br/>키와 몸무게는 강한 상관관계가 있어요. 보통 키가 큰 사람이 몸무게도 더 많이 나가죠. 단순히 평균에서 얼마나 떨어져 있는지만 보면 정상/비정상을 잘못 판단할 수 있어요. 마할라노비스 거리는 이런 관계를 고려해서 더 정확하게 판단합니다!</p>
+                        </div>
+                        <div className="bg-gray-100 p-2 rounded text-sm text-gray-700">📌 <strong>데이터 기준:</strong> 여자 고등학교 1학년 학생들 (평균 키 약 {stats.meanH.toFixed(1)}cm, 평균 몸무게 약 {stats.meanW.toFixed(1)}kg)</div>
+                    </div>
+
+                    <div className="mb-4 bg-indigo-50 p-4 rounded-lg">
+                        <h3 className="font-bold mb-2">🔍 보기 모드 선택</h3>
+                        <div className="flex gap-4">
+                            <label className="flex items-center cursor-pointer"><input type="radio" value="aspect" checked={viewMode === 'aspect'} onChange={(e) => setViewMode(e.target.value)} className="mr-2"/><span className="text-sm">1:1 비율 고정</span></label>
+                            <label className="flex items-center cursor-pointer"><input type="radio" value="normalized" checked={viewMode === 'normalized'} onChange={(e) => setViewMode(e.target.value)} className="mr-2"/><span className="text-sm">정규화 데이터</span></label>
+                        </div>
+                        <p className="text-xs text-gray-600 mt-2">
+                            {viewMode === 'aspect' && '• 1cm = 1kg를 화면에서 같은 길이로 표시해요. 단위가 다르므로 유클리드 원이 타원으로 보여요!'}
+                            {viewMode === 'normalized' && '• 데이터를 표준화해서 평균=0, 표준편차=1로 만들어요. 같은 스케일이 되어 유클리드 원이 정원으로 보여요!'}
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+                        <div className="bg-blue-50 p-4 rounded-lg">
+                            <div className="flex items-center justify-between mb-3">
+                                <h3 className="font-bold text-lg">📊 고1 여학생 키-몸무게 데이터</h3>
+                                <label className="flex items-center text-sm cursor-pointer"><input type="checkbox" checked={showCircles} onChange={(e) => setShowCircles(e.target.checked)} className="mr-2"/>거리 표시</label>
+                            </div>
+                            <div className="flex justify-center overflow-x-auto"><SVGChart normalized={viewMode === 'normalized'} /></div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div className="bg-green-50 p-4 rounded-lg">
+                                <h3 className="font-bold mb-2">
+                                    <span onClick={handleTargetClick} style={{cursor:'pointer', fontSize:'1.4em', marginRight:'8px'}}>🎯</span>
+                                    학생 선택하기
+                                </h3>
+                                <div className="space-y-3">
+                                    <div>
+                                        <label className="block text-sm font-medium mb-1">키: {selectedPoint.height}cm</label>
+                                        <input type="range" min="145" max="175" step="0.1" value={selectedPoint.height} onChange={(e) => setSelectedPoint({...selectedPoint, height: parseFloat(e.target.value)})} className="w-full"/>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium mb-1">몸무게: {selectedPoint.weight}kg</label>
+                                        <input type="range" min="35" max="70" step="0.1" value={selectedPoint.weight} onChange={(e) => setSelectedPoint({...selectedPoint, weight: parseFloat(e.target.value)})} className="w-full"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-purple-50 p-4 rounded-lg">
+                                <h3 className="font-bold mb-3">📏 거리 비교</h3>
+                                <div className="space-y-3">
+                                    <div className="bg-white p-3 rounded border-2" style={{borderColor: getColor(mahDistance)}}>
+                                        <div className="font-bold text-lg">마할라노비스 거리</div>
+                                        <div className="text-2xl font-bold" style={{color: getColor(mahDistance)}}>{mahDistance.toFixed(2)}</div>
+                                        <div className="text-sm text-gray-600 mt-1">
+                                            {mahDistance < 1 && "✅ 매우 일반적이에요"}
+                                            {mahDistance >= 1 && mahDistance < 2 && "⚠️ 조금 특이해요"}
+                                            {mahDistance >= 2 && mahDistance < 3 && "🔶 꽤 특이해요"}
+                                            {mahDistance >= 3 && "🔴 매우 특이해요"}
+                                        </div>
+                                    </div>
+                                    <div className="bg-white p-3 rounded border-2 border-gray-300">
+                                        <div className="font-bold">유클리드 거리</div>
+                                        <div className="text-2xl font-bold text-gray-700">{eucDistance.toFixed(2)}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-yellow-50 p-4 rounded-lg text-sm">
+                                <h3 className="font-bold mb-2">💡 원과 타원의 의미</h3>
+                                <p><span className="text-red-600 font-bold">● 빨간 원</span>: 평균에서 유클리드 거리가 같은 점들</p>
+                                <p><span className="text-purple-600 font-bold">● 보라 타원</span>: 평균에서 마할라노비스 거리가 1, 2, 3인 점들</p>
+                            </div>
+
+                            <div className="bg-orange-50 p-4 rounded-lg text-sm">
+                                <h3 className="font-bold mb-2">🔍 이상치 비교</h3>
+                                <div className="space-y-2">
+                                    <div className="bg-white p-2 rounded border-2 border-red-300">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <div className="w-4 h-4 rounded-full bg-red-400 flex items-center justify-center text-white text-xs font-bold">A</div>
+                                            <span className="font-bold">이상치 A ({outlierA.height}cm, {outlierA.weight}kg)</span>
+                                        </div>
+                                        <div className="text-xs text-gray-600">마할라노비스: <strong>{mahDistanceA.toFixed(2)}</strong> / 유클리드: <strong>{eucDistanceA.toFixed(2)}</strong></div>
+                                        <div className="text-xs text-gray-500">키는 크지만 몸무게가 적음</div>
+                                    </div>
+                                    <div className="bg-white p-2 rounded border-2 border-teal-300">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <div className="w-4 h-4 rounded-full bg-teal-400 flex items-center justify-center text-white text-xs font-bold">B</div>
+                                            <span className="font-bold">이상치 B ({outlierB.height}cm, {outlierB.weight}kg)</span>
+                                        </div>
+                                        <div className="text-xs text-gray-600">마할라노비스: <strong>{mahDistanceB.toFixed(2)}</strong> / 유클리드: <strong>{eucDistanceB.toFixed(2)}</strong></div>
+                                        <div className="text-xs text-gray-500">키는 작지만 몸무게가 많음</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                        <h3 className="font-bold mb-2">🎓 요약</h3>
+                        <ul className="space-y-1 text-gray-700 text-sm">
+                            <li>• <strong>유클리드 거리 (빨간 원)</strong>: 단순히 평균에서 얼마나 떨어져 있는지만 봐요</li>
+                            <li>• <strong>마할라노비스 거리 (보라 타원)</strong>: 데이터들 사이의 관계를 고려해서 "얼마나 이상한지"를 계산해요</li>
+                            <li>• 두 가지 보기 모드를 바꿔가며 원과 타원이 어떻게 보이는지 비교해보세요!</li>
+<li>• 파란 점에 마우스를 올려 각 학생의 키와 몸무게를 확인해보세요!</li>
+                        </ul>
+                    </div>
+                </div>
+            );
+        };
+        
+        ReactDOM.render(<MahalanobisDemo />, document.getElementById('root'));
+    </script>
+</body>
+</html>
