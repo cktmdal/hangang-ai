@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>인공지능 기초</title>
+  <style>
+    /* Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: #94a3b8;
+      font-size: 1.1rem;
+    }
+
+    /* Filter Buttons */
+    .filter-container {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #334155;
+      padding: 0.6rem 1.2rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: #38bdf8;
+      color: #0f172a;
+      border-color: #38bdf8;
+      font-weight: 600;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+    }
+
+    /* Course Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Card Component */
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: #38bdf8;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 600;
+      background: rgba(56, 189, 248, 0.1);
+      color: #38bdf8;
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: #f1f5f9;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-download {
+      display: inline-block;
+      text-align: center;
+      background: #334155;
+      color: #f8fafc;
+      text-decoration: none;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s ease;
+    }
+
+    .btn-download:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>인공지능 기초</h1>
+      <p>AI의 기본 개념부터 머신러닝, 딥러닝 입문 수업자료 모음</p>
+    </header>
+
+    <!-- 카테고리 필터 -->
+    <div class="filter-container">
+      <button class="filter-btn active" onclick="filterCards('all')">전체</button>
+      <button class="filter-btn" onclick="filterCards('개념')">기초 개념</button>
+      <button class="filter-btn" onclick="filterCards('머신러닝')">머신러닝</button>
+      <button class="filter-btn" onclick="filterCards('딥러닝')">딥러닝</button>
+    </div>
+
+    <!-- 수업자료 카드 리스트 -->
+    <div class="grid" id="cardGrid">
+      
+      <div class="card" data-category="개념">
+        <div>
+          <div class="card-header">
+            <span class="tag">1주차</span>
+          </div>
+          <h3>인공지능 개요 및 역사</h3>
+          <p>AI, 머신러닝, 딥러닝의 차이점을 이해하고 AI 기술의 발전 과정을 학습합니다.</p>
+        </div>
+        <a href="#" class="btn-download">강의안 다운로드 (PDF)</a>
+      </div>
+
+      <div class="card" data-category="머신러닝">
+        <div>
+          <div class="card-header">
+            <span class="tag">2주차</span>
+          </div>
+          <h3>지도학습과 비지도학습</h3>
+          <p>데이터의 유형에 따른 학습 방식(회귀, 분류, 군집화)의 기초 이론을 명확히 정의합니다.</p>
+        </div>
+        <a href="#" class="btn-download">강의안 다운로드 (PDF)</a>
+      </div>
+
+      <div class="card" data-category="머신러닝">
+        <div>
+          <div class="card-header">
+            <span class="tag">3주차</span>
+          </div>
+          <h3>파이썬 기반 데이터 전처리</h3>
+          <p>Pandas와 NumPy 라이브러리를 활용하여 AI 모델 입력 데이터를 정제하는 실습입니다.</p>
+        </div>
+        <a href="#" class="btn-download">실습 코드 (IPYNB)</a>
+      </div>
+
+      <div class="card" data-category="딥러닝">
+        <div>
+          <div class="card-header">
+            <span class="tag">4주차</span>
+          </div>
+          <h3>인공신경망(ANN)의 이해</h3>
+          <p>뉴런과 퍼셉트론, 활성화 함수 및 역전파 알고리즘의 동작 원리를 다룹니다.</p>
+        </div>
+        <a href="#" class="btn-download">강의안 다운로드 (PDF)</a>
+      </div>
+
+      <div class="card" data-category="딥러닝">
+        <div>
+          <div class="card-header">
+            <span class="tag">5주차</span>
+          </div>
+          <h3>이미지 처리를 위한 CNN</h3>
+          <p>합성곱 신경망(CNN)을 이용해 시각 데이터를 인식하고 처리하는 구조를 배우고 실습합니다.</p>
+        </div>
+        <a href="#" class="btn-download">실습 코드 (IPYNB)</a>
+      </div>
+
+      <div class="card" data-category="개념">
+        <div>
+          <div class="card-header">
+            <span class="tag">6주차</span>
+          </div>
+          <h3>생성형 AI와 윤리</h3>
+          <p>LLM 모델의 기본 구조와 함께 인공지능 윤리 가이드라인 및 데이터 저작권 문제를 탐구합니다.</p>
+        </div>
+        <a href="#" class="btn-download">강의안 다운로드 (PDF)</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function filterCards(category) {
+      const cards = document.querySelectorAll('.card');
+      const buttons = document.querySelectorAll('.filter-btn');
+
+      // 버튼 활성화 스타일 변경
+      buttons.forEach(btn => {
+        if (btn.innerText === category || (category === 'all' && btn.innerText === '전체')) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      // 카드 필터링
+      cards.forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
