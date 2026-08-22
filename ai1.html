@@ -2749,6 +2749,18 @@ const QuizTab = () => {
         </div>
       )}
     </div>
+    <!-- 학생 정보 입력 및 제출 영역 -->
+<div id="student-submit-container" style="margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9;">
+  <h3>📝 제출자 정보 입력</h3>
+  <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+    <input type="text" id="student-dept" placeholder="학과 (예: 정보컴퓨터과)" style="padding: 8px; flex: 1;" />
+    <input type="text" id="student-id" placeholder="학번 (예: 10101)" style="padding: 8px; flex: 1;" />
+    <input type="text" id="student-name" placeholder="이름 (예: 홍길동)" style="padding: 8px; flex: 1;" />
+  </div>
+  <button id="save-btn" onclick="submitToGoogleSheet()" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+    구글 시트로 저장
+  </button>
+</div>
   );
 };
 
