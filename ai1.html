@@ -2755,4 +2755,79 @@ const QuizTab = () => {
 
 
 
-<!----comment node----><div class="glasp-extension-toaster glasp-extension-toaster--youtube-summary" data-glasp-print="hide" style="display: block; width: 320px; margin: unset; padding: unset; border: unset; border-radius: unset; outline: unset; background-color: unset; box-shadow: unset; position: fixed; top: 40px; right: 24px; z-index: 9999;"><template shadowrootmode="open"><div class="glasp-extension" style="font-family: inherit;"></div></template></div></body><div class="glasp-extension" data-glasp-print="hide" id="glasp-web-summary-button" style="display: block; width: unset; margin: unset; padding: unset; border: unset; border-radius: unset; outline: unset; background-color: unset; box-shadow: unset; position: fixed; bottom: 16px; right: 16px; z-index: 9999;"><div class="glasp-extension" style="font-family: inherit;"></div></div></html>
+<!----comment node---->
+<div class="glasp-extension-toaster glasp-extension-toaster--youtube-summary" data-glasp-print="hide" style="display: block; width: 320px; margin: unset; padding: unset; border: unset; border-radius: unset; outline: unset; background-color: unset; box-shadow: unset; position: fixed; top: 40px; right: 24px; z-index: 9999;"><template shadowrootmode="open"><div class="glasp-extension" style="font-family: inherit;"></div></template></div></body><div class="glasp-extension" data-glasp-print="hide" id="glasp-web-summary-button" style="display: block; width: unset; margin: unset; padding: unset; border: unset; border-radius: unset; outline: unset; background-color: unset; box-shadow: unset; position: fixed; bottom: 16px; right: 16px; z-index: 9999;"><div class="glasp-extension" style="font-family: inherit;"></div>
+</div>
+<!-- ================= 구글 시트 저장 기능 시작 ================= -->
+<div id="student-submit-container" style="max-width: 600px; margin: 30px auto; padding: 20px; border: 2px solid #4CAF50; border-radius: 12px; background-color: #ffffff; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-family: sans-serif;">
+  <h3 style="margin-top: 0; color: #2e7d32;">📝 학생 정보 입력 및 결과 저장</h3>
+  <p style="font-size: 14px; color: #666; margin-bottom: 15px;">퀴즈를 마친 후 학과, 학번, 이름을 입력하고 저장 버튼을 누르세요.</p>
+  
+  <div style="display: flex; gap: 8px; margin-bottom: 15px; justify-content: center; flex-wrap: wrap;">
+    <input type="text" id="student-dept" placeholder="학과 (예: 컴퓨터과)" style="padding: 10px; border: 1px solid #ccc; border-radius: 6px; flex: 1; min-width: 120px;" />
+    <input type="text" id="student-id" placeholder="학번 (예: 10101)" style="padding: 10px; border: 1px solid #ccc; border-radius: 6px; flex: 1; min-width: 100px;" />
+    <input type="text" id="student-name" placeholder="이름 (예: 홍길동)" style="padding: 10px; border: 1px solid #ccc; border-radius: 6px; flex: 1; min-width: 100px;" />
+  </div>
+
+  <button id="save-btn" onclick="submitToGoogleSheet()" style="padding: 12px 24px; background-color: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s;">
+    구글 시트로 저장
+  </button>
+</div>
+
+<script>
+// Apps Script 웹 앱 배포 URL 입력
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzzh0j6iOzouNk3nKIVvXJVaHzHoWaD4ZzWCL4dov8aJooZEqNWLVmf2QMHEiGhxFTJ8w/exec";
+
+async function submitToGoogleSheet() {
+  const dept = document.getElementById('student-dept').value.trim();
+  const studentId = document.getElementById('student-id').value.trim();
+  const name = document.getElementById('student-name').value.trim();
+
+  if (!dept || !studentId || !name) {
+    alert("학과, 학번, 이름을 모두 입력해주세요.");
+    return;
+  }
+
+  // 화면 내 현재 점수 획득
+  const scoreElem = document.querySelector('.score') || document.querySelector('#score');
+  const scoreText = scoreElem ? (scoreElem.innerText || scoreElem.textContent) : "점수 미측정";
+
+  const saveBtn = document.getElementById('save-btn');
+  saveBtn.disabled = true;
+  saveBtn.style.backgroundColor = "#ccc";
+  saveBtn.innerText = "전송 중...";
+
+  const payload = {
+    dept: dept,
+    studentId: studentId,
+    name: name,
+    resultData: `퀴즈 점수: ${scoreText}`
+  };
+
+  try {
+    const response = await fetch(GAS_WEB_APP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+      redirect: "follow"
+    });
+
+    const result = await response.json();
+    if (result.status === 'success') {
+      alert("성공적으로 구글 시트에 저장되었습니다!");
+    } else {
+      alert("저장 실패: " + (result.message || "오류 발생"));
+    }
+  } catch (error) {
+    console.error("전송 에러:", error);
+    alert("전송 중 오류가 발생했습니다.");
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.style.backgroundColor = "#4CAF50";
+    saveBtn.innerText = "구글 시트로 저장";
+  }
+}
+</script>
+<!-- ================= 구글 시트 저장 기능 끝 ================= -->
+
+</html>
