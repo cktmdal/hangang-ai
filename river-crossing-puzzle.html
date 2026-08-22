@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)https://chamsaeda.github.io/river-crossing-puzzle/ -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강 건너기 퍼즐</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 550px;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .river-scene {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .side {
+            width: 180px;
+            min-height: 220px;
+            background: linear-gradient(45deg, #90EE90, #98FB98);
+            border-radius: 15px;
+            padding: 20px;
+            border: 3px solid #228B22;
+            position: relative;
+        }
+
+        .side h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #2d5016;
+            font-size: 1.2em;
+        }
+
+        .characters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            min-height: 120px;
+        }
+
+        .character {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid #333;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .character:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .character.selected {
+            border-color: #ff6b6b;
+            background: #ffe0e0;
+            transform: scale(1.1);
+        }
+
+        .river {
+            width: 50px;
+            height: 200px;
+            background: linear-gradient(180deg, #4169E1, #1E90FF);
+            border-radius: 10px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #000080;
+        }
+
+        /* 💡 배 스타일 수정 */
+        .boat {
+            width: 70px; /* 배 크기 조금 키움 */
+            height: 40px; /* 높이도 조금 키움 */
+            background: transparent; /* 배경을 투명하게 */
+            border: none; /* 테두리 제거 */
+            position: relative;
+            display: flex;
+            flex-direction: row; /* 세로 정렬로 변경 */
+            align-items: center;
+            justify-content: center; /* 캐릭터가 바닥에 놓이도록 */
+            gap: 5px;
+            transition: all 0.5s ease;
+            z-index: 10;
+            padding-bottom: 10px; /* 캐릭터가 바닥에 더 잘 붙도록 */
+        }
+
+        /* 💡 배의 실제 모양을 담당할 부분 */
+        .boat-bottom {
+            width: 100%;
+            height: 30px; /* 배 바닥의 높이 */
+            background: #8B4513; /* 배 색상 */
+            border-radius: 0 0 40% 40% / 0 0 80% 80%; /* 타원형 바닥 모양 */
+            border: 2px solid #654321;
+            position: absolute; /* .boat 컨테이너 내에서 위치 지정 */
+            bottom: 0; /* 바닥에 붙도록 */
+            left: 0;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3); /* 그림자 추가 */
+        }
+
+        .boat-character {
+            z-index: 11; /* 캐릭터가 배 바닥 위에 오도록 */
+            position: relative; /* z-index 적용을 위해 필요 */
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            background: white;
+            border: 1px solid #333;
+        }
+
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff8787);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #ffcdd2;
+        }
+
+        .message.success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 2px solid #c8e6c9;
+        }
+
+        .message.info {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 2px solid #bbdefb;
+        }
+
+        .rules {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #4a5568;
+        }
+
+        .rules h3 {
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .rules ul {
+            margin-left: 20px;
+            color: #666;
+        }
+
+        .rules li {
+            margin: 5px 0;
+        }
+
+        .moves-counter {
+            text-align: center;
+            font-size: 18px;
+            color: #4a5568;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        @keyframes celebration {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .celebration {
+            animation: celebration 0.5s ease-in-out 3;
+        }
+    </style>
+</head>
+<body>
+<font color="white">부산진여자상업고등학교 인공지능기초 학습자료</font>
+    <div class="game-container">
+        <h1>🌉 강 건너기 퍼즐</h1>
+        
+        <div class="rules">
+            <h3>게임 규칙:</h3>
+            <ul>
+                <li>농부는 배를 조종할 수 있고, 혼자 또는 다른 하나와 함께 강을 건널 수 있습니다</li>
+                <li>농부가 없는 쪽에서는 늑대가 양을 잡아먹고, 양이 양배추를 먹습니다</li>
+                <li>모든 것들을 안전하게 오른쪽으로 옮기세요!</li>
+            </ul>
+        </div>
+
+        <div class="moves-counter">
+            이동 횟수: <span id="moveCounter">0</span>
+        </div>
+
+        <div class="river-scene">
+            <div class="side" id="leftSide">
+                <h3>왼쪽 (출발점)</h3>
+                <div class="characters" id="leftCharacters"><div class="character" data-type="farmer" title="농부">👨‍🌾</div><div class="character" data-type="wolf" title="늑대">🐺</div><div class="character" data-type="sheep" title="양">🐑</div><div class="character" data-type="cabbage" title="양배추">🥬</div></div>
+            </div>
+
+            <div class="river">
+                <div class="boat" id="boat" style="transform: translateX(-50px);">
+                     <div class="boat-bottom"></div></div>
+            </div>
+
+            <div class="side" id="rightSide">
+                <h3>오른쪽 (목표점)</h3>
+                <div class="characters" id="rightCharacters"></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="crossBtn" onclick="crossRiver()">강 건너기</button>
+            <button class="btn" id="resetBtn" onclick="resetGame()">게임 초기화</button>
+        </div>
+
+        <div class="message" id="message">캐릭터를 클릭해서 배에 태우고 강을 건너보세요!</div>
+    </div>
+
+    <script>
+        // 오디오 객체는 사용자 상호작용 후 로드
+        let moveSound = null;
+        let winSound = null;
+
+        class RiverCrossingGame {
+            constructor() {
+                this.leftSide = new Set(['farmer', 'wolf', 'sheep', 'cabbage']);
+                this.rightSide = new Set();
+                this.boatSide = 'left';
+                this.boatPassengers = new Set();
+                this.selectedCharacter = null;
+                this.moves = 0;
+                this.gameWon = false;
+                this.gameOver = false;
+                
+                this.initializeEventListeners();
+                this.updateDisplay();
+                this.updateButtonStates();
+            }
+
+            initializeEventListeners() {
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('character')) {
+                        if (!this.gameOver && !this.gameWon) {
+                            this.selectCharacter(e.target);
+                        }
+                    }
+                });
+            }
+
+            selectCharacter(element) {
+                const characterType = element.dataset.type;
+                const currentSide = this.boatSide === 'left' ? this.leftSide : this.rightSide;
+                
+                if (!currentSide.has(characterType)) {
+                    this.showMessage('배가 있는 쪽의 캐릭터만 선택할 수 있습니다!', 'error');
+                    return;
+                }
+
+                if (this.boatPassengers.has(characterType)) {
+                    this.boatPassengers.delete(characterType);
+                } else {
+                    if (characterType !== 'farmer' && !this.boatPassengers.has('farmer')) {
+                        this.showMessage('농부가 없으면 다른 캐릭터는 배에 탈 수 없습니다!', 'error');
+                        return;
+                    }
+
+                    if (this.boatPassengers.size >= 2) {
+                        this.showMessage('배에는 농부와 함께 하나만 더 탈 수 있습니다!', 'error');
+                        return;
+                    }
+
+                    if (characterType !== 'farmer' && this.boatPassengers.size === 1 && this.boatPassengers.has('farmer')) {
+                        this.boatPassengers.add(characterType);
+                    }
+                    else if (characterType === 'farmer' && this.boatPassengers.size === 0) {
+                        this.boatPassengers.add('farmer');
+                    }
+                    else if (characterType !== 'farmer' && this.boatPassengers.size === 0) {
+                         this.showMessage('농부가 없으면 다른 캐릭터는 배에 탈 수 없습니다!', 'error');
+                         return;
+                    }
+                    else if (this.boatPassengers.size >= 2) {
+                        this.showMessage('배에는 농부와 함께 하나만 더 탈 수 있습니다!', 'error');
+                        return;
+                    }
+                    else {
+                        this.boatPassengers.add(characterType);
+                    }
+                }
+                
+                this.updateDisplay();
+            }
+
+            crossRiver() {
+                if (this.gameWon || this.gameOver) return;
+                
+                if (this.boatPassengers.size === 0) {
+                    this.showMessage('배에 탈 사람을 선택하세요!', 'error');
+                    return;
+                }
+
+                if (!this.boatPassengers.has('farmer')) {
+                    this.showMessage('농부가 없으면 배를 조종할 수 없습니다!', 'error');
+                    return;
+                }
+                
+                if (!moveSound) {
+                    moveSound = new Audio('0.mp3');
+                }
+                moveSound.play().catch(error => {
+                    console.error("Audio playback failed:", error);
+                });
+
+
+                const fromSide = this.boatSide === 'left' ? this.leftSide : this.rightSide;
+                const toSide = this.boatSide === 'left' ? this.rightSide : this.leftSide;
+
+                for (const passenger of this.boatPassengers) {
+                    fromSide.delete(passenger);
+                    toSide.add(passenger);
+                }
+
+                this.boatSide = this.boatSide === 'left' ? 'right' : 'left';
+                this.boatPassengers.clear();
+                this.selectedCharacter = null;
+                this.moves++;
+
+                if (this.checkGameState()) {
+                    this.updateDisplay();
+                    this.updateButtonStates();
+                    return;
+                }
+
+                if (this.rightSide.size === 4) {
+                    this.gameWon = true;
+                    this.showMessage(`축하합니다! ${this.moves}번 만에 모두 안전하게 건넜습니다! 🎉`, 'success');
+                    document.body.classList.add('celebration');
+
+                    if (!winSound) {
+                        winSound = new Audio('10.mp3');
+                    }
+                    winSound.play().catch(error => {
+                        console.error("Win sound playback failed:", error);
+                    });
+
+                    this.updateButtonStates();
+                } else {
+                    this.showMessage('좋습니다! 계속 진행하세요.', 'info');
+                }
+
+                this.updateDisplay();
+            }
+
+            checkGameState() {
+                if (!this.leftSide.has('farmer') && this.leftSide.size > 0) {
+                    if (this.leftSide.has('wolf') && this.leftSide.has('sheep')) {
+                        this.showMessage('게임 오버! 늑대가 양을 잡아먹었습니다! 🐺💀', 'error');
+                        this.gameOver = true;
+                        return true;
+                    }
+                    if (this.leftSide.has('sheep') && this.leftSide.has('cabbage')) {
+                        this.showMessage('게임 오버! 양이 양배추를 먹어버렸습니다! 🐑🥬', 'error');
+                        this.gameOver = true;
+                        return true;
+                    }
+                }
+
+                if (!this.rightSide.has('farmer') && this.rightSide.size > 0) {
+                    if (this.rightSide.has('wolf') && this.rightSide.has('sheep')) {
+                        this.showMessage('게임 오버! 늑대가 양을 잡아먹었습니다! 🐺💀', 'error');
+                        this.gameOver = true;
+                        return true;
+                    }
+                    if (this.rightSide.has('sheep') && this.rightSide.has('cabbage')) {
+                        this.showMessage('게임 오버! 양이 양배추를 먹어버렸습니다! 🐑🥬', 'error');
+                        this.gameOver = true;
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            updateDisplay() {
+                this.updateSide('left');
+                this.updateSide('right');
+                this.updateBoat();
+                document.getElementById('moveCounter').textContent = this.moves;
+            }
+
+            updateSide(side) {
+                const sideElement = document.getElementById(side + 'Characters');
+                const characters = side === 'left' ? this.leftSide : this.rightSide;
+                
+                sideElement.innerHTML = '';
+                
+                const characterEmojis = {
+                    farmer: '👨‍🌾',
+                    wolf: '🐺',
+                    sheep: '🐑',
+                    cabbage: '🥬'
+                };
+
+                const characterNames = {
+                    farmer: '농부',
+                    wolf: '늑대',
+                    sheep: '양',
+                    cabbage: '양배추'
+                };
+
+                for (const character of characters) {
+                    const div = document.createElement('div');
+                    div.className = 'character';
+                    div.dataset.type = character;
+                    div.title = characterNames[character];
+                    div.textContent = characterEmojis[character];
+                    
+                    if (this.boatPassengers.has(character)) {
+                        div.classList.add('selected');
+                    }
+                    
+                    sideElement.appendChild(div);
+                }
+            }
+
+            updateBoat() {
+                const boatElement = document.getElementById('boat');
+                // 기존 boat-bottom이 있으면 제거하고 다시 추가 (캐릭터만 업데이트하기 위함)
+                const existingBoatBottom = boatElement.querySelector('.boat-bottom');
+                if (existingBoatBottom) {
+                    existingBoatBottom.remove();
+                }
+
+                // 캐릭터만 다시 그리기 (boat-bottom은 한 번만 그리면 됨)
+                const passengerElements = boatElement.querySelectorAll('.boat-character');
+                passengerElements.forEach(el => el.remove()); // 기존 캐릭터들 제거
+
+                const characterEmojis = {
+                    farmer: '👨‍🌾',
+                    wolf: '🐺',
+                    sheep: '🐑',
+                    cabbage: '🥬'
+                };
+
+                for (const passenger of this.boatPassengers) {
+                    const div = document.createElement('div');
+                    div.className = 'boat-character';
+                    div.textContent = characterEmojis[passenger];
+                    boatElement.appendChild(div);
+                }
+
+                // boat-bottom 다시 추가
+                const boatBottomDiv = document.createElement('div');
+                boatBottomDiv.className = 'boat-bottom';
+                boatElement.appendChild(boatBottomDiv);
+
+                if (this.boatSide === 'left') {
+                    boatElement.style.transform = 'translateX(-50px)';
+                } else {
+                    boatElement.style.transform = 'translateX(50px)';
+                }
+            }
+
+            showMessage(text, type = 'info') {
+                const messageElement = document.getElementById('message');
+                messageElement.textContent = text;
+                messageElement.className = `message ${type}`;
+            }
+
+            updateButtonStates() {
+                const crossBtn = document.getElementById('crossBtn');
+                const resetBtn = document.getElementById('resetBtn');
+                
+                if (this.gameOver || this.gameWon) {
+                    crossBtn.disabled = true;
+                    resetBtn.disabled = false;
+                } else {
+                    crossBtn.disabled = false;
+                    resetBtn.disabled = false;
+                }
+            }
+
+            reset() {
+                this.leftSide = new Set(['farmer', 'wolf', 'sheep', 'cabbage']);
+                this.rightSide = new Set();
+                this.boatSide = 'left';
+                this.boatPassengers = new Set();
+                this.selectedCharacter = null;
+                this.moves = 0;
+                this.gameWon = false;
+                this.gameOver = false;
+                document.body.classList.remove('celebration');
+                this.showMessage('게임이 초기화되었습니다. 캐릭터를 클릭해서 배에 태우고 강을 건너보세요!', 'info');
+                this.updateDisplay();
+                this.updateButtonStates();
+            }
+        }
+
+        let game = new RiverCrossingGame();
+
+        function crossRiver() {
+            game.crossRiver();
+        }
+
+        function resetGame() {
+            game.reset();
+        }
+    </script>
+
+</body></html>
