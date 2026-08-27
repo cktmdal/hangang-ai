@@ -858,6 +858,12 @@ code {
         <button class="btn-check" onclick="checkAnswer('q5', '2', '교실에 없었던 민우는 범인이 아니므로, 범인은 지호가 됩니다.')">정답 확인</button>
         <div class="explanation" id="q5-exp"></div>
     </div>
+    <div className="p-6 text-center border-t border-gray-100">            
+            <a href="index.html"
+              className="inline-block bg-gradient-to-r from-indigo-700 to-violet-700 text-white w-64 py-3 rounded-lg font-bold text-lg hover:opacity-90 transition-all shadow-lg hover:shadow-xl">
+              🏠 홈으로 돌아가기
+            </a>
+          </div>
 </section>
 
 </div>
@@ -919,11 +925,6 @@ function checkAnswer(qId, correctAnswer, explanationText) {
     document.getElementById("correct-count").innerText = correctCount;
 }
 </script>
-    <div className="p-6 text-center border-t border-gray-100">            
-            <a href="index.html"
-              className="inline-block bg-gradient-to-r from-indigo-700 to-violet-700 text-white w-64 py-3 rounded-lg font-bold text-lg hover:opacity-90 transition-all shadow-lg hover:shadow-xl">
-              🏠 홈으로 돌아가기
-            </a>
-          </div>
+    
 </body>
 </html>
