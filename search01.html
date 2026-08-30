@@ -6567,6 +6567,25 @@ ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.c
                   <p className="font-bold text-gray-800 mt-5 mb-1">🌳 DFS 탐색 트리 (일부)</p>
                   <p className="text-base text-gray-500 mb-2">버튼을 눌러 DFS가 <span className="font-bold text-indigo-600">한 우물만 파듯</span> 노드를 하나씩 방문하는 순서를 직접 확인해보세요! 방문한 노드에는 순서 번호가 붙어요. (목표 상태까지 전부 보여주면 트리가 너무 커져서, 처음 몇 단계만 보여드려요 · 가로 스크롤 가능)</p>
                   <PuzzleTreeSVG mode="dfs" />
+                  <div>
+                   <p> 한 방향으로 갈 수 있는 데까지 깊게 들어간 후, 막히거나 끝에 도달하면 이전 갈림길로 되돌아와 다른 방향을 탐색합니다.</p>
+                     <ul>
+                        <li>방문 순서: 이미지에 표시된 보라색 번호 순서 그대로 탐색합니다.
+                           <ol>
+                              <li>루트(1번)에서 좌 방향인 2번으로 깊게 내려감</li>
+                              <li>2번에서 하 방향인 3번으로 내려감</li>
+                              <li>3번에서 하 방향인 4번으로 내려가서 목표 상태를 발견함</li>
+                           </ol>
+                        </li>
+                        <li>특징:
+                          <ul>
+                              <li>빠른 발견: 이 문제의 경우 정답이 탐색 트리 왼쪽 깊은 곳에 위치해 있어 4번째 방문 만에 정답을 찾아냅니다.</li>
+                              <li>단점: 만약 정답이 다른 쪽에 있었다면, 답이 없는 깊은 경로로 계속 파고들 수 있어 최단 경로를 보장하지 못합니다.</li>
+                             
+                           </ul>
+                        </li>
+                     </ul>
+                  </div>
                   <p className="font-bold text-gray-800 mt-5 mb-1">🎮 직접 풀어보기</p>
                   <p className="text-base text-gray-500 mb-3">아래 퍼즐은 매번 랜덤으로 섞여요. 숫자를 클릭해서 1~8 순서로 맞춰보세요!</p>
                   <SlidingPuzzleGame />
