@@ -6632,6 +6632,26 @@ ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.c
                   <p className="font-bold text-gray-800 mt-5 mb-1">🌳 BFS 탐색 트리 (일부)</p>
                   <p className="text-base text-gray-500 mb-2">트리 모양은 DFS와 똑같지만, <span className="font-bold text-green-600">같은 깊이(층)를 먼저 모두</span> 방문한다는 점이 달라요. 버튼을 눌러 방문 순서 번호가 DFS 때와 어떻게 다르게 매겨지는지 비교해보세요! (가로 스크롤 가능)</p>
                   <PuzzleTreeSVG theme="green" mode="bfs" />
+                  <div>
+                   <p> 💠시작 지점에서 가까운 단계(트리의 같은 높이/레벨)를 모두 탐색한 후, 다음 깊이의 노드들을 순서대로 탐색합니다..</p>
+                     <ul>
+                        <li>🔹방문 순서: 트리의 레벨(층) 단위로 위에서 아래로, 왼쪽에서 오른쪽으로 탐색합니다.
+                           <ol>
+                              <li>🔸1단계 (깊이 0): 1번 노드 방문</li>
+                              <li>🔸2단계 (깊이 1): 2번, 6번, 10번 노드를 순서대로 방문</li>
+                              <li>🔸3단계 (깊이 2): 3번, 7번, 11번, 14번, 17번 노드를 순서대로 방문</li>
+                              <li>🔸4단계 (깊이 3): 4번, 5번, 8번 ... 순서로 방문하다가 4번 노드에서 목표 상태를 발견함</li>
+                           </ol>
+                        </li>
+                        <li>🔹특징:
+                          <ul>
+                              <li>🔸최단 경로 보장: 출발점으로부터 최소한의 이동 횟수로 도착하는 정답을 항상 찾아냅니다.</li>
+                              <li>🔸단점: 목표 상태가 깊은 곳에 있을수록 같은 레벨의 수많은 노드들을 먼저 다 탐색해야 하므로 더 많은 메모리와 시간이 소요됩니다..</li>
+                             
+                           </ul>
+                        </li>
+                     </ul>
+                  </div>
                   <p className="font-bold text-gray-800 mt-5 mb-1">🎮 직접 풀어보기</p>
                   <p className="text-base text-gray-500 mb-3">아래 퍼즐은 매번 랜덤으로 섞여요. 숫자를 클릭해서 1~8 순서로 맞춰보세요!</p>
                   <SlidingPuzzleGame />
