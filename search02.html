@@ -293,6 +293,81 @@ code {
     font-weight: bold;
 }
 
+/* 추가된 논리식 실습 전용 스타일 */
+.practice-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.practice-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    padding: 14px 18px;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.practice-label {
+    flex: 2;
+    font-size: 0.95rem;
+    font-weight: 600;
+    min-width: 200px;
+}
+
+.practice-input-group {
+    flex: 1.5;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 250px;
+}
+
+.practice-input-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.practice-input-group input[type="text"]:focus {
+    border-color: var(--primary-bg);
+}
+
+.check-btn {
+    background-color: var(--primary-bg);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s;
+}
+
+.check-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+.feedback {
+    font-size: 0.9rem;
+    font-weight: bold;
+    min-width: 80px;
+}
+
+.feedback.correct { color: #166534; }
+.feedback.incorrect { color: #991b1b; }
+
 /* 기호 강조 박스 */
 .symbol-card {
     display: flex;
@@ -661,6 +736,48 @@ code {
             </table>
         </div>
     </div>
+
+    <!-- 명제 논리식 실습 카드 (추가된 부분) -->
+    <div class="card">
+        <h3><i class="fa-solid fa-pen-to-square"></i> 명제 논리식 직접 만들어보기</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">
+            제시된 조건에 맞는 논리식을 직접 작성하고 확인 버튼을 눌러보세요.<br>
+            (기호: <b>¬</b>, <b>∧</b>, <b>∨</b>, <b>→</b>, <b>↔</b> / 영문 입력 가능: <b>~</b>, <b>AND</b>, <b>OR</b>, <b>-></b>, <b><-></b>)
+        </p>
+        
+        <div class="sub-box" style="margin-bottom: 15px; background: #eef2ff;">
+            <strong>[전제조건]</strong> <code>p</code>: 날씨가 춥다 / <code>q</code>: 코트를 입는다
+        </div>
+
+        <div class="practice-container">
+            <div class="practice-item">
+                <span class="practice-label">1) 날씨가 춥지 않다.</span>
+                <div class="practice-input-group">
+                    <input type="text" id="expr1" placeholder="예: ~p 또는 ¬p">
+                    <button type="button" class="check-btn" onclick="checkExpression(1, ['~p', '¬p', 'not p'])">확인</button>
+                    <span id="fb1" class="feedback"></span>
+                </div>
+            </div>
+
+            <div class="practice-item">
+                <span class="practice-label">2) 날씨가 춥고, 코트를 입는다.</span>
+                <div class="practice-input-group">
+                    <input type="text" id="expr2" placeholder="예: p ∧ q">
+                    <button type="button" class="check-btn" onclick="checkExpression(2, ['p^q', 'p∧q', 'p and q', 'p&q'])">확인</button>
+                    <span id="fb2" class="feedback"></span>
+                </div>
+            </div>
+
+            <div class="practice-item">
+                <span class="practice-label">3) 날씨가 춥다면 코트를 입는다.</span>
+                <div class="practice-input-group">
+                    <input type="text" id="expr3" placeholder="예: p -> q">
+                    <button type="button" class="check-btn" onclick="checkExpression(3, ['p->q', 'p→q', 'p implies q'])">확인</button>
+                    <span id="fb3" class="feedback"></span>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 <!-- 탭 3: 명제 논리 추론 -->
@@ -894,6 +1011,27 @@ function switchTab(event, tabId) {
 
     event.currentTarget.classList.add('active');
     document.getElementById(tabId).classList.add('active');
+}
+
+// 추가된 논리식 정답 확인 함수
+function checkExpression(num, validAnswers) {
+    const inputVal = document.getElementById(`expr${num}`).value.trim().toLowerCase().replace(/\s+/g, '');
+    const feedback = document.getElementById(`fb${num}`);
+    
+    const isCorrect = validAnswers.some(answer => {
+        return answer.toLowerCase().replace(/\s+/g, '') === inputVal;
+    });
+
+    if (inputVal === '') {
+        feedback.textContent = '입력 필요';
+        feedback.className = 'feedback incorrect';
+    } else if (isCorrect) {
+        feedback.textContent = '정답입니다! ⭕';
+        feedback.className = 'feedback correct';
+    } else {
+        feedback.textContent = '오답입니다 ❌';
+        feedback.className = 'feedback incorrect';
+    }
 }
 
 // 퀴즈 정답 확인 기능
