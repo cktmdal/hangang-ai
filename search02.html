@@ -574,6 +574,69 @@ code {
     color: #991b1b;
     border: 1px solid #fecaca;
 }
+    /* 추가*/
+    /* 추론 실습 카드 전용 스타일 */
+.inference-practice-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid #e9ecef;
+    margin-top: 20px;
+}
+
+.inference-group {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 20px;
+}
+
+.inference-group h4 {
+    color: var(--primary-bg);
+    font-size: 1.05rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.inference-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto auto;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+@media (max-width: 768px) {
+    .inference-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.inference-row input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.inference-row input[type="text"]:focus {
+    border-color: var(--primary-bg);
+}
+
+/* 수정(교정)된 텍스트 색상 변경 */
+.inference-row input.corrected {
+    color: #e67e22;
+    font-weight: bold;
+    border-color: #f39c12;
+    background-color: #fff9eb;
+}
 </style>
 </head>
 <body>
@@ -869,6 +932,72 @@ code {
                 <p><strong>• 결론: p → r (AI를 잘하면 수학을 잘한다)</strong></p>
             </div>
         </div>
+        <!-- 긍정 논법 & 삼단 논법 직접 만들기 실습 카드 -->
+    <div class="inference-practice-card">
+        <h3><i class="fa-solid fa-pen-fancy"></i> 명제 논리 추론 직접 만들기 실습</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px;">
+            각 규칙과 사실, 결론을 작성하고 [확인] 버튼을 누르면 인공지능이 논리적 오류를 점검해줍니다. <br>
+            <strong>오류가 있어 자동 수정된 항목은 <span style="color: #e67e22; font-weight: bold;">주황색 텍스트</span>로 변경됩니다.</strong>
+        </p>
+
+        <!-- 1. 긍정 논법 입력 영역 (3개) -->
+        <div class="inference-group">
+            <h4><i class="fa-solid fa-check-double"></i> 긍정 논법 실습 (3문항)</h4>
+            
+            <div class="inference-row" id="mp-row-1">
+                <input type="text" id="mp1-rule" placeholder="규칙: p → q (예: 합격하면 AI를 공부한다)">
+                <input type="text" id="mp1-fact" placeholder="사실: p (예: 합격했다)">
+                <input type="text" id="mp1-conclusion" placeholder="결론: q (예: AI를 공부한다)">
+                <button type="button" class="check-btn" onclick="checkModusPonens(1)">확인</button>
+                <span id="mp1-fb" class="feedback"></span>
+            </div>
+
+            <div class="inference-row" id="mp-row-2">
+                <input type="text" id="mp2-rule" placeholder="규칙: p → q">
+                <input type="text" id="mp2-fact" placeholder="사실: p">
+                <input type="text" id="mp2-conclusion" placeholder="결론: q">
+                <button type="button" class="check-btn" onclick="checkModusPonens(2)">확인</button>
+                <span id="mp2-fb" class="feedback"></span>
+            </div>
+
+            <div class="inference-row" id="mp-row-3">
+                <input type="text" id="mp3-rule" placeholder="규칙: p → q">
+                <input type="text" id="mp3-fact" placeholder="사실: p">
+                <input type="text" id="mp3-conclusion" placeholder="결론: q">
+                <button type="button" class="check-btn" onclick="checkModusPonens(3)">확인</button>
+                <span id="mp3-fb" class="feedback"></span>
+            </div>
+        </div>
+
+        <!-- 2. 삼단 논법 입력 영역 (3개) -->
+        <div class="inference-group">
+            <h4><i class="fa-solid fa-diagram-next"></i> 삼단 논법 실습 (3문항)</h4>
+            
+            <div class="inference-row" id="syl-row-1">
+                <input type="text" id="syl1-rule1" placeholder="규칙 1: p → q (예: 비가 오면 땅이 젖는다)">
+                <input type="text" id="syl1-rule2" placeholder="규칙 2: q → r (예: 땅이 젖으면 신발이 더러워진다)">
+                <input type="text" id="syl1-conclusion" placeholder="결론: p → r (예: 비가 오면 신발이 더러워진다)">
+                <button type="button" class="check-btn" onclick="checkSyllogism(1)">확인</button>
+                <span id="syl1-fb" class="feedback"></span>
+            </div>
+
+            <div class="inference-row" id="syl-row-2">
+                <input type="text" id="syl2-rule1" placeholder="규칙 1: p → q">
+                <input type="text" id="syl2-rule2" placeholder="규칙 2: q → r">
+                <input type="text" id="syl2-conclusion" placeholder="결론: p → r">
+                <button type="button" class="check-btn" onclick="checkSyllogism(2)">확인</button>
+                <span id="syl2-fb" class="feedback"></span>
+            </div>
+
+            <div class="inference-row" id="syl-row-3">
+                <input type="text" id="syl3-rule1" placeholder="규칙 1: p → q">
+                <input type="text" id="syl3-rule2" placeholder="규칙 2: q → r">
+                <input type="text" id="syl3-conclusion" placeholder="결론: p → r">
+                <button type="button" class="check-btn" onclick="checkSyllogism(3)">확인</button>
+                <span id="syl3-fb" class="feedback"></span>
+            </div>
+        </div>
+    </div>
     </div>
 </section>
 
@@ -1121,6 +1250,107 @@ function checkAnswer(qId, correctAnswer, explanationText) {
     // 맞힌 개수 갱신
     const correctCount = Object.values(solved).filter(val => val === true).length;
     document.getElementById("correct-count").innerText = correctCount;
+}
+    // 긍정 논법 (Modus Ponens) 검증 및 자동 수정 함수
+function checkModusPonens(idx) {
+    const ruleInput = document.getElementById(`mp${idx}-rule`);
+    const factInput = document.getElementById(`mp${idx}-fact`);
+    const concInput = document.getElementById(`mp${idx}-conclusion`);
+    const fb = document.getElementById(`mp${idx}-fb`);
+
+    // 기존 수정 클래스 초기화
+    [ruleInput, factInput, concInput].forEach(el => el.classList.remove('corrected'));
+
+    const ruleVal = ruleInput.value.trim();
+    const factVal = factInput.value.trim();
+    const concVal = concInput.value.trim();
+
+    if (!ruleVal || !factVal || !concVal) {
+        fb.textContent = '모두 입력 필요';
+        fb.className = 'feedback incorrect';
+        return;
+    }
+
+    // 조건문 분리 (면, 라면, 이면, ->, => 기준)
+    const splitRegex = /(?:이면|라면|면|->|=>)/;
+    const parts = ruleVal.split(splitRegex);
+
+    if (parts.length < 2) {
+        fb.textContent = '규칙 형태 오류 (p이면 q이다 규칙 필수)';
+        fb.className = 'feedback incorrect';
+        return;
+    }
+
+    const pText = parts[0].replace(/만약|조건|규칙|:| /g, '').trim();
+    const qText = parts[1].replace(/이다|한다|/g, '').trim();
+
+    let isFactMatch = factVal.includes(pText) || pText.includes(factVal.replace(/했다|이다|다/g, ''));
+    let isConcMatch = concVal.includes(qText) || qText.includes(concVal.replace(/했다|이다|다/g, ''));
+
+    if (isFactMatch && isConcMatch) {
+        fb.textContent = '정답입니다! ⭕';
+        fb.className = 'feedback correct';
+    } else {
+        // 올바른 결론으로 자동 교정
+        if (!isConcMatch) {
+            concInput.value = `결론: ${parts[1].trim()}`;
+            concInput.classList.add('corrected');
+        }
+        if (!isFactMatch) {
+            factInput.value = `사실: ${parts[0].trim()}`;
+            factInput.classList.add('corrected');
+        }
+        fb.textContent = '수정됨 ⚠️';
+        fb.className = 'feedback incorrect';
+    }
+}
+
+// 삼단 논법 (Syllogism) 검증 및 자동 수정 함수
+function checkSyllogism(idx) {
+    const r1Input = document.getElementById(`syl${idx}-rule1`);
+    const r2Input = document.getElementById(`syl${idx}-rule2`);
+    const concInput = document.getElementById(`syl${idx}-conclusion`);
+    const fb = document.getElementById(`syl${idx}-fb`);
+
+    [r1Input, r2Input, concInput].forEach(el => el.classList.remove('corrected'));
+
+    const r1Val = r1Input.value.trim();
+    const r2Val = r2Input.value.trim();
+    const concVal = concInput.value.trim();
+
+    if (!r1Val || !r2Val || !concVal) {
+        fb.textContent = '모두 입력 필요';
+        fb.className = 'feedback incorrect';
+        return;
+    }
+
+    const splitRegex = /(?:이면|라면|면|->|=>)/;
+    const p1 = r1Val.split(splitRegex);
+    const p2 = r2Val.split(splitRegex);
+
+    if (p1.length < 2 || p2.length < 2) {
+        fb.textContent = '규칙 형태 오류 (~이면 ~이다 방식)';
+        fb.className = 'feedback incorrect';
+        return;
+    }
+
+    const cause1 = p1[0].trim();
+    const effect1 = p1[1].trim();
+    const cause2 = p2[0].trim();
+    const effect2 = p2[1].trim();
+
+    // 올바른 연쇄 구조 (p -> q, q -> r => p -> r)
+    const expectedConclusion = `${cause1}면 ${effect2}`;
+
+    if (concVal.includes(cause1) && concVal.includes(effect2)) {
+        fb.textContent = '정답입니다! ⭕';
+        fb.className = 'feedback correct';
+    } else {
+        concInput.value = `결론: ${expectedConclusion}`;
+        concInput.classList.add('corrected');
+        fb.textContent = '수정됨 ⚠️';
+        fb.className = 'feedback incorrect';
+    }
 }
 </script>
     
