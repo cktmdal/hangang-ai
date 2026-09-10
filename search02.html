@@ -917,7 +917,87 @@ code {
                 <p>개별 사례들의 관찰 결과로부터 일반적인 결론을 유도합니다.</p>
                  <p>예시: 관찰한 까마귀 A, B, C가 모두 검은색이다 → 모든 까마귀는 검은색일 것이다(결론).</p>
             </div>
+            <!-- 연역적 추론 & 귀납적 추론 실습 영역 -->
+<div class="reasoning-practice-container" style="background: #f8f9fa; padding: 20px; border-radius: 12px; font-family: sans-serif; max-width: 600px; margin: 20px auto; border: 1px solid #e0e0e0;">
+  
+  <!-- 1. 연역적 추론 실습 -->
+  <div style="background: #ffffff; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+    <h3 style="color: #4f46e5; margin-top: 0;">🧠 연역적 추론 실습</h3>
+    <p style="font-size: 0.9em; color: #666;">일반적인 원리(전제)로부터 확실한 결론을 도출해보세요.</p>
+    
+    <div style="margin-bottom: 10px;">
+      <label style="display: block; font-size: 0.85em; font-weight: bold; margin-bottom: 4px;">일반적 전제 (모든 X는 Y이다):</label>
+      <input type="text" id="deductive-premise" placeholder="예: 모든 사람은 죽는다" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+    </div>
+    <div style="margin-bottom: 10px;">
+      <label style="display: block; font-size: 0.85em; font-weight: bold; margin-bottom: 4px;">구체적 사실 (A는 X이다):</label>
+      <input type="text" id="deductive-fact" placeholder="예: 소크라테스는 사람이다" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+    </div>
+    <div style="margin-bottom: 10px;">
+      <label style="display: block; font-size: 0.85em; font-weight: bold; margin-bottom: 4px;">구체적 결론 (따라서 A는 Y이다):</label>
+      <input type="text" id="deductive-conclusion" placeholder="예: 소크라테스는 죽는다" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+    </div>
+    <button onclick="checkDeductive()" style="background-color: #4f46e5; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">확인</button>
+    <p id="deductive-result" style="margin-top: 10px; font-weight: bold; font-size: 0.9em;"></p>
+  </div>
+
+  <!-- 2. 귀납적 추론 실습 -->
+  <div style="background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+    <h3 style="color: #059669; margin-top: 0;">🔍 귀납적 추론 실습</h3>
+    <p style="font-size: 0.9em; color: #666;">여러 개별 관찰 사례로부터 일반적인 결론을 유도해보세요.</p>
+    
+    <div style="margin-bottom: 10px;">
+      <label style="display: block; font-size: 0.85em; font-weight: bold; margin-bottom: 4px;">관찰 사례 1:</label>
+      <input type="text" id="inductive-obs1" placeholder="예: 첫 번째 까마귀는 검은색이다" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+    </div>
+    <div style="margin-bottom: 10px;">
+      <label style="display: block; font-size: 0.85em; font-weight: bold; margin-bottom: 4px;">관찰 사례 2:</label>
+      <input type="text" id="inductive-obs2" placeholder="예: 두 번째 까마귀도 검은색이다" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+    </div>
+    <div style="margin-bottom: 10px;">
+      <label style="display: block; font-size: 0.85em; font-weight: bold; margin-bottom: 4px;">일반적 결론 (아마도 ~일 것이다):</label>
+      <input type="text" id="inductive-conclusion" placeholder="예: 모든 까마귀는 검은색일 것이다" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+    </div>
+    <button onclick="checkInductive()" style="background-color: #059669; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">확인</button>
+    <p id="inductive-result" style="margin-top: 10px; font-weight: bold; font-size: 0.9em;"></p>
+  </div>
+
+</div>
+
+<!-- 검증용 자바스크립트 -->
+<script>
+  function checkDeductive() {
+    const p = document.getElementById('deductive-premise').value.trim();
+    const f = document.getElementById('deductive-fact').value.trim();
+    const c = document.getElementById('deductive-conclusion').value.trim();
+    const res = document.getElementById('deductive-result');
+
+    if (!p || !f || !c) {
+      res.textContent = "⚠️ 모든 입력창을 채워주세요!";
+      res.style.color = "#d97706";
+    } else {
+      res.textContent = "✅ 연역적 추론 구조 제출 완료! (전제가 참이면 결론은 100% 참입니다.)";
+      res.style.color = "#16a34a";
+    }
+  }
+
+  function checkInductive() {
+    const o1 = document.getElementById('inductive-obs1').value.trim();
+    const o2 = document.getElementById('inductive-obs2').value.trim();
+    const c = document.getElementById('inductive-conclusion').value.trim();
+    const res = document.getElementById('inductive-result');
+
+    if (!o1 || !o2 || !c) {
+      res.textContent = "⚠️ 모든 입력창을 채워주세요!";
+      res.style.color = "#d97706";
+    } else {
+      res.textContent = "✅ 귀납적 추론 구조 제출 완료! (개연성이 높지만 예외가 존재할 수 있습니다.)";
+      res.style.color = "#16a34a";
+    }
+  }
+</script>
         </div>
+        
 
         <div class="card">
             <h3><i class="fa-solid fa-scale-balanced"></i> 대표적인 추론 규칙</h3>
