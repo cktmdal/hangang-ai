@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고등학교 인공지능 기초 - 기계학습 핵심 요약</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --code-bg: #0f172a;
+            --quiz-bg: #f1f5f9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 2.5rem 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            padding: 0 1rem;
+        }
+
+        nav button {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        nav button:hover, nav button.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .section-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .section-card.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.6rem;
+            color: #0f172a;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.4rem;
+        }
+
+        .grid-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 1rem;
+        }
+
+        .grid-item {
+            background-color: #f1f5f9;
+            padding: 1.2rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .grid-item h4 {
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        /* 프로세스 순서도 스타일 */
+        .process-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .step-item {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .step-badge {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+
+        /* 코드 블록 스타일 */
+        .code-container {
+            position: relative;
+            background-color: var(--code-bg);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .code-container pre {
+            color: #f8fafc;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* 확인학습(퀴즈) 스타일 */
+        .quiz-container {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px dashed var(--primary-color);
+        }
+
+        .quiz-title {
+            color: var(--secondary-color);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quiz-item {
+            background-color: var(--quiz-bg);
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 1.2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .quiz-item p.question {
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+        }
+
+        .quiz-options {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .quiz-options li {
+            margin-bottom: 0.3rem;
+        }
+
+        .answer-btn {
+            background-color: #64748b;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .answer-btn:hover {
+            background-color: #475569;
+        }
+
+        .explanation {
+            display: none;
+            margin-top: 0.8rem;
+            padding: 0.8rem;
+            background-color: #e2e8f0;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>인공지능 기초 요약노트</h1>
+        <p>II. 인공지능과 학습 - 핵심 이론 및 실습 정리</p>
+    </header>
+
+    <nav id="navbar">
+        <button class="active" onclick="showSection('sec1')">1. 기계학습이란?</button>
+        <button onclick="showSection('sec2')">2. 데이터 수집</button>
+        <button onclick="showSection('sec3')">3. 데이터 전처리</button>
+        <button onclick="showSection('sec4')">4. 기계학습의 3가지 유형</button>
+        <button onclick="showSection('sec5')">5. 모델 학습 및 성능 평가</button>
+        <button onclick="showSection('sec6')">6. 실습하기</button>
+    </nav>
+
+    <main>
+        <!-- 섹션 1: 기계학습의 개념 -->
+        <section id="sec1" class="section-card active">
+            <h2>1. 기계학습(Machine Learning)의 이해</h2>
+            <p><strong>기계학습</strong>이란 컴퓨터가 제공된 데이터를 통해 스스로 규칙을 학습하고, 이를 활용해 새로운 데이터에 대한 결과를 예측하거나 판단하는 기술입니다.</p>
+            
+            <h3>1) 인공지능, 기계학습, 딥러닝의 관계</h3>
+            <ul>
+                <li><strong>인공지능(AI):</strong> 인간의 지능적 행동을 모방하는 모든 기술의 총칭</li>
+                <li><strong>기계학습(ML):</strong> 인공지능의 한 분야로, 데이터에 기반하여 스스로 성장하고 향상되는 기술</li>
+                <li><strong>딥러닝(DL):</strong> 기계학습의 한 종류로, 인간의 뇌 신경망을 모방한 인공신경망 구조를 이용하는 기술</li>
+            </ul>
+
+            <div class="grid-box">
+                <div class="grid-item">
+                    <h4>전통적 프로그래밍</h4>
+                    <p>사람이 명확한 규칙(Algorithm)과 데이터를 입력하면 컴퓨터가 결과를 출력함.</p>
+                </div>
+                <div class="grid-item">
+                    <h4>기계학습</h4>
+                    <p>컴퓨터에 데이터와 정답/결과를 제공하여 컴퓨터 스스로 규칙(Rule)을 찾아내도록 학습함.</p>
+                </div>
+            </div>
+
+            <h3>2) 인공지능을 활용한 문제 해결 과정</h3>
+            <p>기계학습 모델을 구축하여 실제 문제를 해결할 때는 아래의 5가지 단계를 순차적으로 거칩니다.</p>
+
+            <div class="process-steps">
+                <div class="step-item">
+                    <span class="step-badge">1단계</span>
+                    <div><strong>문제 정의:</strong> 해결하고자 하는 문제를 명확히 하고, 인공지능 적용 가능성과 목적 설정</div>
+                </div>
+                <div class="step-item">
+                    <span class="step-badge">2단계</span>
+                    <div><strong>데이터 수집 및 전처리:</strong> 문제 해결에 필요한 데이터를 모으고 결측치/이상치 정제 및 변환</div>
+                </div>
+                <div class="step-item">
+                    <span class="step-badge">3단계</span>
+                    <div><strong>모델선정 및 학습:</strong> 문제 유형(분류/회귀 등)에 맞는 알맞은 기계학습 알고리즘 선택 후 학습 진행</div>
+                </div>
+                <div class="step-item">
+                    <span class="step-badge">4단계</span>
+                    <div><strong>모델 평가 및 수정:</strong> 평가 데이터를 통해 정확도를 측정하고 과대적합 등을 보완하여 성능 개선</div>
+                </div>
+                <div class="step-item">
+                    <span class="step-badge">5단계</span>
+                    <div><strong>문제 해결 및 적용:</strong> 성능이 검증된 모델을 실제 서비스나 시스템 환경에 배포 및 활용</div>
+                </div>
+            </div>
+
+            <!-- 확인학습 1 -->
+            <div class="quiz-container">
+                <h3 class="quiz-title">✏️ 1단원 확인학습</h3>
+                
+                <div class="quiz-item">
+                    <p class="question">Q1. [5지선다형] 인공지능, 기계학습, 딥러닝의 포함 관계를 올바르게 나타낸 것은?</p>
+                    <ul class="quiz-options">
+                        <li>① 딥러닝 ⊂ 기계학습 ⊂ 인공지능</li>
+                        <li>② 인공지능 ⊂ 기계학습 ⊂ 딥러닝</li>
+                        <li>③ 기계학습 ⊂ 딥러닝 ⊂ 인공지능</li>
+                        <li>④ 딥러닝 ⊂ 인공지능 ⊂ 기계학습</li>
+                        <li>⑤ 인공지능 ⊂ 딥러닝 ⊂ 기계학습</li>
+                    </ul>
+                    <button class="answer-btn" onclick="toggleAns('q1_1')">정답 및 해설 보기</button>
+                    <div id="q1_1" class="explanation">
+                        <strong>정답: ①</strong><br>
+                        인공지능(AI)이 가장 범주가 크며, 그 하위 분야로 기계학습(ML), 기계학습의 하위 요소로 딥러닝(DL)이 포함됩니다.
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <p class="question">Q2. [5지선다형] 전통적 프로그래밍과 기계학습의 차이점에 대한 설명으로 옳지 않은 것은?</p>
+                    <ul class="quiz-options">
+                        <li>① 전통적 프로그래밍은 사람이 규칙을 직접 작성하여 입력한다.</li>
+                        <li>② 기계학습은 데이터와 결과를 입력하면 컴퓨터가 스스로 규칙을 찾아낸다.</li>
+                        <li>③ 전통적 프로그래밍은 복잡한 패턴을 가진 비정형 데이터 처리에 매우 유리하다.</li>
+                        <li>④ 기계학습은 학습 데이터의 품질과 양에 큰 영향을 받는다.</li>
+                        <li>⑤ 기계학습은 새로운 데이터가 들어왔을 때 기존 학습 결과를 바탕으로 결과를 예측한다.</li>
+                    </ul>
+                    <button class="answer-btn" onclick="toggleAns('q1_2')">정답 및 해설 보기</button>
+                    <div id="q1_2" class="explanation">
+                        <strong>정답: ③</strong><br>
+                        사람이 규칙을 일일이 정해야 하는 전통적 프로그래밍은 이미지, 음성 등 복잡한 비정형 데이터 처리에 한계가 있으며, 이러한 한계를 극복하기 위해 기계학습이 사용됩니다.
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <p class="question">Q3. [주관식] 인공지능을 활용한 문제 해결 과정의 5단계 중, 수집한 데이터의 결측치나 이상치를 정제하는 단계는 몇 단계인가요? (숫자 또는 단계명 작성)</p>
+                    <button class="answer-btn" onclick="toggleAns('q1_3')">정답 및 해설 보기</button>
+                    <div id="q1_3" class="explanation">
+                        <strong>정답: 2단계 (데이터 수집 및 전처리)</strong><br>
+                        데이터 정제 및 변환은 2단계인 '데이터 수집 및 전처리' 과정에서 이루어집니다.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 섹션 2: 데이터 수집 -->
+        <section id="sec2" class="section-card">
+            <h2>2. 데이터 수집(Data Collection)</h2>
+            <p>인공지능 모델 학습의 첫 단추는 문제 해결 목적에 맞는 양질의 데이터를 정확하게 수집하는 것입니다.</p>
+
+            <h3>1) 데이터 수집 방법</h3>
+            <div class="grid-box">
+                <div class="grid-item">
+                    <h4>공공 데이터 활용</h4>
+                    <p>정부, 지자체, 공공기관에서 개방한 신뢰성 높은 데이터를 다운로드하여 활용 (예: 공공데이터포털)</p>
+                </div>
+                <div class="grid-item">
+                    <h4>웹 크롤링 및 스크래핑</h4>
+                    <p>웹 페이지의 HTML/텍스트 정보를 프로그램으로 자동 수집하는 방식</p>
+                </div>
+                <div class="grid-item">
+                    <h4>센서 및 IoT 수집</h4>
+                    <p>카메라, 온도/습도 센서, GPS 등 하드웨어 장치를 통해 실시간 데이터 수집</p>
+                </div>
+                <div class="grid-item">
+                    <h4>설문조사 및 사용자 직접 입력</h4>
+                    <p>설문지나 애플리케이션 입력을 통해 사용자의 행동 데이터를 직접 수집</p>
+                </div>
+            </div>
+
+            <h3>2) 데이터 수집 시 주의점: 데이터 편향성(Data Bias)</h3>
+            <p>수집된 데이터가 현실의 다양성을 제대로 반영하지 못하고 특정 집단이나 성향으로 기울어져 있는 현상을 <strong>데이터 편향성</strong>이라고 합니다. 이는 AI의 불공정하거나 잘못된 예측 결과를 초래할 수 있습니다.</p>
+
+            <div class="grid-box">
+                <div class="grid-item">
+                    <h4>표본 추출의 편향 (Sampling Bias)</h4>
+                    <p><strong>발생 원인:</strong> 전체 집단을 대표하지 못하고 특정 연령, 지역, 성별 등의 데이터만 불균형하게 수집되었을 때 발생</p>
+                </div>
+                <div class="grid-item">
+                    <h4>사회적/편견의 반영 (Historical Bias)</h4>
+                    <p><strong>발생 원인:</strong> 과거부터 사회에 존재하던 인간의 고정관념, 성차별, 인종 차별 등의 편견이 수집된 데이터에 그대로 담겼을 때 발생</p>
+                </div>
+                <div class="grid-item">
+                    <h4>측정 및 라벨링 오류 (Measurement Bias)</h4>
+                    <p><strong>발생 원인:</strong> 데이터 수집 센서의 측정 오류나 데이터를 분류하고 정답을 달 때(Labeling) 사람의 주관적 오류가 개입되었을 때 발생</p>
+                </div>
+            </div>
+
+            <!-- 확인학습 2 -->
+            <div class="quiz-container">
+                <h3 class="quiz-title">✏️ 2단원 확인학습</h3>
+                
+                <div class="quiz-item">
+                    <p class="question">Q1. [5지선다형] 웹 페이지에 존재하는 수많은 텍스트와 이미지 정보를 프로그램을 이용해 자동으로 수집하는 기술은?</p>
+                    <ul class="quiz-options">
+                        <li>① 데이터 정규화</li>
+                        <li>② 웹 크롤링(Web Crawling)</li>
+                        <li>③ 데이터 라벨링</li>
+                        <li>④ 이상치 제거</li>
+                        <li>⑤ 차원 축소</li>
+                    </ul>
+                    <button class="answer-btn" onclick="toggleAns('q2_1')">정답 및 해설 보기</button>
+                    <div id="q2_1" class="explanation">
+                        <strong>정답: ②</strong><br>
+                        웹 크롤링(또는 스크래핑)은 웹 문서 구조를 파악하여 자동으로 필요한 데이터를 추출/수집하는 기술입니다.
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <p class="question">Q2. [5지선다형] 데이터 수집 과정에서 전체 집단을 대표하지 못하고 특정 연령대나 지역의 데이터만 과도하게 수집되어 발생하는 편향은?</p>
+                    <ul class="quiz-options">
+                        <li>① 표본 추출의 편향</li>
+                        <li>② 역사적 사회 편향</li>
+                        <li>③ 센서 측정 오류 편향</li>
+                        <li>④ 알고리즘 자체 편향</li>
+                        <li>⑤ 라벨링 주관성 편향</li>
+                    </ul>
+                    <button class="answer-btn" onclick="toggleAns('q2_2')">정답 및 해설 보기</button>
+                    <div id="q2_2" class="explanation">
+                        <strong>정답: ①</strong><br>
+                        모집단 전체를 잘 대표하도록 표본을 뽑지 못했을 때 발생하는 편향을 '표본 추출의 편향(Sampling Bias)'이라고 합니다.
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <p class="question">Q3. [주관식] 수집된 데이터가 특정 집단으로 기울어져 인공지능이 편견을 갖거나 불공정한 결과를 내게 만드는 현상을 무엇이라고 하는가?</p>
+                    <button class="answer-btn" onclick="toggleAns('q2_3')">정답 및 해설 보기</button>
+                    <div id="q2_3" class="explanation">
+                        <strong>정답: 데이터 편향성 (또는 데이터 편향)</strong><br>
+                        데이터가 현실의 다양성을 반영하지 못하고 한쪽으로 치우쳐 있는 상태를 의미합니다.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 섹션 3: 데이터 전처리 -->
+        <section id="sec3" class="section-card">
+            <h2>3. 데이터 전처리(Data Preprocessing)</h2>
+            <p>수집된 가공되지 않은 상태(Raw Data)의 데이터를 머신러닝 알고리즘이 학습하기에 최적화된 형태로 정제하고 변환하는 과정입니다.</p>
+
+            <h3>1) 데이터의 형태 및 속성 분류</h3>
+            <ul>
+                <li><strong>정형 데이터:</strong> 표(Table) 구조로 구성되어 수치화 및 정렬이 용이한 데이터 (예: 엑셀 파일, DB)</li>
+                <li><strong>비정형 데이터:</strong> 정해진 구조가 없는 데이터 (예: 이미지, 음성, 텍스트, 영상)</li>
+            </ul>
+
+            <div class="grid-box">
+                <div class="grid-item">
+                    <h4>수치형 데이터 (Numerical Data)</h4>
+                    <p>숫자로 표현되며 사칙연산이 가능한 데이터</p>
+                    <ul>
+                        <li><strong>연속형:</strong> 키, 몸무게, 온도 등 연속적 값</li>
+                        <li><strong>이산형:</strong> 학생 수, 판매 개수 등 세어지는 값</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>범주형 데이터 (Categorical Data)</h4>
+                    <p>수치적 의미가 없고 범주(그룹)로 나뉘는 데이터</p>
+                    <ul>
+                        <li><strong>명목형:</strong> 혈액형, 성별 등 순서 없는 범주</li>
+                        <li><strong>순서형:</strong> 학점(A/B/C), 만족도 등 순서 있는 범주</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>2) 변수의 역할 (독립변수와 종속변수)</h3>
+            <div class="grid-box">
+                <div class="grid-item">
+                    <h4>독립변수 (Feature)</h4>
+                    <p>결과를 예측하기 위해 입력되는 데이터 (예: 공부 시간, 수면 시간)</p>
+                </div>
+                <div class="grid-item">
+                    <h4>종속변수 (Target/Label)</h4>
+                    <p>독립변수의 영향으로 결정되는 정답 데이터 (예: 시험 합격 여부)</p>
+                </div>
+            </div>
+
+            <h3>3) 데이터 전처리의 주요 작업</h3>
+            <div class="grid-box">
+                <div class="grid-item">
+                    <h4>결측값 처리</h4>
+                    <p>누락된 데이터를 제거하거나 대표값(평균값, 중앙값 등)으로 대체</p>
+                </div>
+                <div class="grid-item">
+                    <h4>이상치 제거</h4>
+                    <p>정상 범주를 크게 벗어난 잘못된 값이나 노이즈 정제</p>
+                </div>
+                <div class="grid-item">
+                    <h4>정규화 및 인코딩</h4>
+                    <p>수치 범위를 맞추거나(정규화), 범주형 데이터를 숫자로 변환(인코딩)</p>
+                </div>
+            </div>
+
+            <!-- 확인학습 3 -->
+            <div class="quiz-container">
+                <h3 class="quiz-title">✏️ 3단원 확인학습</h3>
+                
+                <div class="quiz-item">
+                    <p class="question">Q1. [5지선다형] 다음 중 '범주형 데이터'이면서 '순서형 데이터'에 해당하는 것은?</p>
+                    <ul class="quiz-options">
+                        <li>① 학생들의 키 (cm)</li>
+                        <li>② 혈액형 (A, B, O, AB형)</li>
+                        <li>③ 영화 만족도 등급 (매우만족, 보통, 불만족)</li>
+                        <li>④ 하루 수면 시간</li>
+                        <li>⑤ 거주하는 도시 이름</li>
+                    </ul>
+                    <button class="answer-btn" onclick="toggleAns('q3_1')">정답 및 해설 보기</button>
+                    <div id="q3_1" class="explanation">
+                        <strong>정답: ③</strong><br>
+                        만족도 등급은 수치 자체는 아니지만 명확한 순서(위계)가 존재하는 범주형-순서형 데이터입니다.
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <p class="question">Q2. [5지선다형] 아파트 가격을 예측하는 AI 모델을 만들 때, '아파트 평수'와 '아파트 가격'의 변수 역할로 올바른 것은?</p>
+                    <ul class="quiz-options">
+                        <li>① 아파트 평수: 종속변수 / 아파트 가격: 독립변수</li>
+                        <li>② 아파트 평수: 독립변수 / 아파트 가격: 종속변수</li>
+                        <li>③ 두 변수 모두 종속변수</li>
+                        <li>④ 두 변수 모두 범주형 독립변수</li>
+                        <li>⑤ 두 변수 모두 이산형 변수</li>
+                    </ul>
+                    <button class="answer-btn" onclick="toggleAns('q3_2')">정답 및 해설 보기</button>
+                    <div id="q3_2" class="explanation">
+                        <strong>정답: ②</strong><br>
+                        원인이 되는 입력 데이터(아파트 평수)는 독립변수, 그로 인해 예측되는 결과 데이터(아파트 가격)는 종속변수입니다.
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <p class="question">Q3. [주관식] 수집된 데이터에 값이 비어있는 '결측값'이 발생했을 때 처리할 수 있는 방법 2가지를 쓰시오.</p>
+                    <button class="answer-btn" onclick="toggleAns('q3_3')">정답 및 해설 보기</button>
+                    <div id="q3_3" class="explanation">
+                        <strong>정답: 해당 데이터 행 제거, 대표값(평균/중앙값/최빈값)으로 채우기(대체)</strong><br>
+                        누락된 결측치는 삭제하거나 적절한 대표값으로 대체하여 처리합니다.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 섹션 4: 기계학습 유형 -->
+        <section id="sec4" class="section-card">
+            <h2>4. 기계학습의 3가지 유형</h2>
+            <p>기계학습은 학습 방식과 정답(레이블, Label)의 유무에 따라 크게 세 가지로 나뉩니다.</p>
+
+            <div class="grid-box">
+                <div class="grid-item">
+                    <h4> 지도학습 (Supervised Learning)</h4>
+                    <p><strong>문제(독립변수)와 정답(종속변수)</strong>을 함께 주고 학습시키는 방식입니다.</p>
+                    <ul>
+                        <li><strong>분류(Classification):</strong> 종속변수가 범주형 데이터인 경우 (예: 스팸메일 분류)</li>
+                        <li><strong>회귀(Regression):</strong> 종속변수가 수치형 데이터인 경우 (예: 집값 예측)</li>
+                    </ul>
+                </div>
+
+                <div class="grid-item">
+                    <h4> 비지도학습 (Unsupervised Learning)</h4>
+                    <p><strong>정답(종속변수) 없이</strong> 문제 데이터만 주고 데이터 간의 자체적 규칙이나 패턴을 찾게 하는 방식입니다.</p>
+                    <ul>
+                        <li><strong>군집화(Clustering):</strong> 유사한 특징을 가진 데이터끼리 무리로 묶는 것 (예: 고객 구매 패턴 분류)</li>
+                        <li><strong>차원 축소:</strong> 주요 특징만 추출하여 데이터 구조를 단순화</li>
+                    </ul>
+                </div>
+
+                <div class="grid-item">
+                    <h4> 강화학습 (Reinforcement Learning)</h4>
+                    <p>에이전트가 환경 속에서 행동하고, 그 결과에 따라 **보상(Reward) 또는 벌점**을 받으며 최적의 행동 방식을 학습합니다.</p>
+                    <ul>
+                        <li>예시: 알파고(바둑), 자율주행, 게임 인공지능</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 확인학습 4 -->
+            <div class="quiz-container">
+                <h3 class="quiz-title">✏️ 4단원 확인학습</h3>
+                
+                <div class="quiz-item">
+                    <p class="question">Q1. [5지선다형] 다음 중 '지도학습'의 '회귀(Regression)' 문제에 해당하는 것은?</p>
+                    <ul class="quiz-options">
+                        <li>① 이메일이 스팸인지 아닌지 판별하기</li>
+                        <li>② 사진 속 동물이 고양이인지 강아지인지 구분하기</li>
+                        <li>③ 내일의 미세먼지 농도 수치 예측하기</li>
+                        <li>④ 유사한 구매 성향을 가진 쇼핑몰 고객끼리 그룹 묶기</li>
+                        <li>⑤ 로봇이 스스로 장애물을 피해 목적지까지 이동하도록 학습하기</li>
+                    </ul>
+                    <button class="answer-btn" onclick="toggleAns('q4_1')">정답 및 해설 보기</button>
+                    <div id="q4_1" class="explanation">
+                        <strong>정답: ③</strong><br>
+                        미세먼지 농도와 같이 연속적인 '수치형 데이터'를 예측하는 문제는 지도학습의 회귀에 해당합니다. (①, ②는 분류, ④는 비지도학습 군집화, ⑤는 강화학습)
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <p class="question">Q2. [5지선다형] 정답(레이블)이 없는 데이터를 바탕으로 데이터 간의 유사성을 측정하여 스스로 그룹을 형성하는 비지도학습 기술은?</p>
+                    <ul class="quiz-options">
+                        <li>① 분류(Classification)</li>
+                        <li>② 회귀(Regression)</li>
+                        <li>③ 군집화(Clustering)</li>
+                        <li>④ 보상 학습(Reward Learning)</li>
+                        <li>⑤ 정규화(Normalization)</li>
+                    </ul>
+                    <button class="answer-btn" onclick="toggleAns('q4_2')">정답 및 해설 보기</button>
+                    <div id="q4_2" class="explanation">
+                        <strong>정답: ③</strong><br>
+                        정답 없이 유사한 데이터를 무리로 묶어주는 기술을 '군집화(Clustering)'라고 합니다.
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <p class="question">Q3. [주관식] 알파고와 같이 선택한 행동에 대한 '보상(Reward)'을 통해 최적의 행동 기준을 학습해 나가는 기계학습 유형은 무엇인가?</p>
+                    <button class="answer-btn" onclick="toggleAns('q4_3')">정답 및 해설 보기</button>
+                    <div id="q4_3" class="explanation">
+                        <strong>정답: 강화학습 (Reinforcement Learning)</strong><br>
+                        행동에 따른 보상과 벌점을 통해 최선의 전략을 익히는 방식입니다.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 섹션 5: 모델 학습 및 평가 -->
+        <section id="sec5" class="section-card">
+            <h2>5. 모델 학습과 성능 평가</h2>
+            
+            <h3>1) 데이터 세트 분할</h3>
+            <p>수집한 데이터는 모델 성능 검증을 위해 나뉘어 사용됩니다.</p>
+            <ul>
+                <li><strong>학습 데이터 (Training Data):</strong> AI 모델을 학습시키는 데 사용 (약 70~80%)</li>
+                <li><strong>평가 데이터 (Testing Data):</strong> 새로운 데이터에 대한 모델 성능 검증에 사용 (약 20~30%)</li>
+            </ul>
+
+            <h3>2) 과대적합과 과소적합</h3>
+            <div class="grid-box">
+                <div class="grid-item">
+                    <h4>과대적합 (Overfitting)</h4>
+                    <p>학습 데이터에 지나치게 적응하여 학습 데이터 정확도는 높지만, 새로운 평가 데이터에서는 성능이 크게 떨어지는 상태</p>
+                </div>
+                <div class="grid-item">
+                    <h4>과소적합 (Underfitting)</h4>
+                    <p>모델이 데이터의 패턴을 충분히 학습하지 못해 학습 및 평가 데이터 모두에서 성능이 낮게 나오는 상태</p>
+                </div>
+            </div>
+
+            <h3>3) 모델 평가 지표 (분류 모델 기준)</h3>
+            <ul>
+                <li><strong>정확도 (Accuracy):</strong> 전체 예측 중 올바르게 맞힌 비율</li>
+                <li><strong>정밀도 및 재현율:</strong> 정답 및 오답 판정의 구체적 정확성을 체크하기 위한 상세 지표</li>
+            </ul>
+
+            <!-- 확인학습 5 -->
+            <div class="quiz-container">
+                <h3 class="quiz-title">✏️ 5단원 확인학습</h3>
+                
+                <div class="quiz-item">
+                    <p class="question">Q1. [5지선다형] 모델 학습 시 전체 데이터를 '학습 데이터'와 '평가 데이터'로 분리하여 사용하는 주요 이유는?</p>
+                    <ul class="quiz-options">
+                        <li>① 데이터 수집 비용을 줄이기 위해</li>
+                        <li>② 학습 속도를 높이기 위해</li>
+                        <li>③ 처음 보는 새로운 데이터에 대한 모델의 일반화 능력을 평가하기 위해</li>
+                        <li>④ 데이터의 이상치를 자동으로 제거하기 위해</li>
+                        <li>⑤ 독립변수를 종속변수로 바꾸기 위해</li>
+                    </ul>
+                    <button class="answer-btn" onclick="toggleAns('q5_1')">정답 및 해설 보기</button>
+                    <div id="q5_1" class="explanation">
+                        <strong>정답: ③</strong><br>
+                        학습에 사용하지 않은 새로운 평가 데이터를 시험하여 실제 적용 시 잘 작동할지 객관적으로 검증하기 위함입니다.
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <p class="question">Q2. [5지선다형] AI 모델이 학습 데이터의 세부 노이즈까지 지나치게 암기하여, 테스트 데이터 예측력이 떨어지는 현상을 무엇이라 하는가?</p>
+                    <ul class="quiz-options">
+                        <li>① 과소적합 (Underfitting)</li>
+                        <li>② 과대적합 (Overfitting)</li>
+                        <li>③ 정규화 (Normalization)</li>
+                        <li>④ 표본 편향 (Sampling Bias)</li>
+                        <li>⑤ 차원 축소 (Dimension Reduction)</li>
+                    </ul>
+                    <button class="answer-btn" onclick="toggleAns('q5_2')">정답 및 해설 보기</button>
+                    <div id="q5_2" class="explanation">
+                        <strong>정답: ②</strong><br>
+                        학습 데이터에만 과도하게 맞춰진 상태를 과대적합(Overfitting)이라고 부릅니다.
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <p class="question">Q3. [주관식] 분류 모델이 예측한 전체 결과 중 실제 정답을 올바르게 맞춰낸 비율을 뜻하는 가장 대표적인 평가 지표는?</p>
+                    <button class="answer-btn" onclick="toggleAns('q5_3')">정답 및 해설 보기</button>
+                    <div id="q5_3" class="explanation">
+                        <strong>정답: 정확도 (Accuracy)</strong><br>
+                        (맞힌 개수 / 전체 예측 개수)로 산출되는 대표적인 평가 지표입니다.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 섹션 6: 실습하기 -->
+        <section id="sec6" class="section-card">
+            <h2>6. 실습하기 (붓꽃 데이터셋 분류)</h2>
+            <p>머신러닝의 대표 예제인 **붓꽃(Iris) 데이터셋**을 이용해 꽃받침과 꽃잎의 길이에 따른 붓꽃의 품종을 예측하는 지도학습 분류 실습을 진행합니다.</p>
+
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode('code-block')">코드 복사</button>
+                <pre id="code-block"><code># 1. 필요한 라이브러리 및 붓꽃 데이터 불러오기
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+
+# 2. 데이터 수집 (Iris 데이터셋 로드)
+iris = load_iris()
+X = iris.data    # 독립변수(Feature): 꽃받침 길이/너비, 꽃잎 길이/너비 (수치형 데이터)
+y = iris.target  # 종속변수(Label): 0(Setosa), 1(Versicolor), 2(Virginica) (범주형 데이터)
+
+# 3. 데이터 세트 분할 (학습 데이터 80%, 평가 데이터 20%)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# 4. 모델 생성 및 학습 (의사결정나무 모델)
+model = DecisionTreeClassifier()
+model.fit(X_train, y_train)
+
+# 5. 모델 평가 (테스트 데이터 예측 및 정확도 계산)
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"모델 정확도(Accuracy): {accuracy * 100:.2f}%")
+
+# 6. 새로운 데이터로 품종 예측하기
+# 예시: 꽃받침 길이 5.1cm, 너비 3.5cm, 꽃잎 길이 1.4cm, 너비 0.2cm
+new_flower = [[5.1, 3.5, 1.4, 0.2]]
+prediction = model.predict(new_flower)
+predicted_species = iris.target_names[prediction[0]]
+
+print(f"새로운 데이터의 예측 품종: {predicted_species}")
+</code></pre>
+            </div>
+
+            <h3>실습 가이드</h3>
+            <ul>
+                <li><strong>Google Colab</strong>(colab.research.google.com)에 접속하여 로그인한 뒤 '새 노트'를 생성합니다.</li>
+                <li>상단의 <strong>[코드 복사]</strong> 버튼을 누르고 코드 셀에 붙여넣습니다.</li>
+                <li><strong>[Ctrl + Enter]</strong> 키를 눌러 코드를 실행하고 모델 정확도와 예측된 품종 결과를 확인합니다.</li>
+                <li><code>new_flower</code> 배열의 수치를 바꿔가며 새로운 꽃 데이터에 따른 예측 결과를 테스트해 보세요.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>고등학교 인공지능 기초 교과서 핵심 이론 정리 페이지</p>
+    </footer>
+
+    <script>
+        function showSection(sectionId) {
+            // 모든 섹션 숨기기
+            const sections = document.querySelectorAll('.section-card');
+            sections.forEach(sec => sec.classList.remove('active'));
+
+            // 모든 버튼 비활성화
+            const buttons = document.querySelectorAll('#navbar button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // 선택된 섹션 및 버튼 활성화
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // 코드 복사 기능
+        function copyCode(elementId) {
+            const codeText = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                alert('코드가 클립보드에 복사되었습니다!');
+            }).catch(err => {
+                console.error('복사 실패:', err);
+            });
+        }
+
+        // 정답 및 해설 토글 기능
+        function toggleAns(id) {
+            const exp = document.getElementById(id);
+            if (exp.style.display === "block") {
+                exp.style.display = "none";
+            } else {
+                exp.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>
