@@ -275,13 +275,53 @@
             color: #64748b;
             font-size: 0.9rem;
         }
+        .video-btn-container {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 15px 0;
+}
+
+.youtube-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ff0000; /* 유튜브 레드 컬러 */
+  color: #ffffff;
+  padding: 10px 18px;
+  border-radius: 20px; /* 둥근 알약 형태 버튼 */
+  font-weight: bold;
+  font-size: 14px;
+  text-decoration: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease-in-out;
+}
+
+/* 마우스 호버 효과 */
+.youtube-btn:hover {
+  background-color: #cc0000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+}
+
+.youtube-btn i {
+  font-size: 18px;
+}
     </style>
 </head>
 <body>
 
     <header>
         <h1>인공지능 기초 요약노트</h1>
-        <p> <a href="https://www.youtube.com/watch?v=IiyYsAMmmw4" alt="">기계학습영상</a> <br/><a href="https://www.youtube.com/watch?v=6MrCdXBlmqM&list=PLi9w7Ax2qVA9z-gT2YxmSyB0WJC3omJrX&index=5" alt="">빅데이터영상</a></p>
+       <div class="video-btn-container">
+  <a href="https://www.youtube.com/watch?v=IiyYsAMmmw4" class="youtube-btn">
+    <i class="fa-brands fa-youtube"></i> 기계학습 영상
+  </a>
+  <a href="https://www.youtube.com/watch?v=6MrCdXBlmqM&list=PLi9w7Ax2qVA9z-gT2YxmSyB0WJC3omJrX&index=5" class="youtube-btn">
+    <i class="fa-brands fa-youtube"></i> 빅데이터 영상
+  </a>
+</div>
     </header>
 
     <nav id="navbar">
