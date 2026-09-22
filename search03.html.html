@@ -207,7 +207,7 @@
             background-color: var(--secondary-color);
         }
 
-        /* 확인학습(퀴즈) 스타일 */
+        /* 확인학습(퀴즈) 및 실습 테이블 스타일 */
         .quiz-container {
             margin-top: 2.5rem;
             padding-top: 1.5rem;
@@ -270,59 +270,90 @@
             font-size: 0.9rem;
         }
 
+        /* 학생 실습 표 스타일 추가 */
+        .activity-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.8rem;
+            background-color: white;
+        }
+
+        .activity-table th, .activity-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .activity-table th {
+            background-color: #e2e8f0;
+            color: var(--secondary-color);
+            text-align: center;
+        }
+
+        .activity-table textarea {
+            width: 100%;
+            height: 60px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 6px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
         footer {
             text-align: center;
             margin-top: 3rem;
             color: #64748b;
             font-size: 0.9rem;
         }
+
         .video-btn-container {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin: 15px 0;
-}
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 15px 0;
+        }
 
-.youtube-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #ff0000; /* 유튜브 레드 컬러 */
-  color: #ffffff;
-  padding: 10px 18px;
-  border-radius: 20px; /* 둥근 알약 형태 버튼 */
-  font-weight: bold;
-  font-size: 14px;
-  text-decoration: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-  transition: all 0.2s ease-in-out;
-}
+        .youtube-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #ff0000;
+            color: #ffffff;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s ease-in-out;
+        }
 
-/* 마우스 호버 효과 */
-.youtube-btn:hover {
-  background-color: #cc0000;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  color: #ffffff;
-}
+        .youtube-btn:hover {
+            background-color: #cc0000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: #ffffff;
+        }
 
-.youtube-btn i {
-  font-size: 18px;
-}
+        .youtube-btn i {
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
 
     <header>
         <h1>인공지능 기초 요약노트</h1>
-       <div class="video-btn-container">
-  <a href="https://www.youtube.com/watch?v=IiyYsAMmmw4" class="youtube-btn">
-    <i class="fa-brands fa-youtube"></i> 기계학습 영상
-  </a>
-  <a href="https://www.youtube.com/watch?v=6MrCdXBlmqM&list=PLi9w7Ax2qVA9z-gT2YxmSyB0WJC3omJrX&index=5" class="youtube-btn">
-    <i class="fa-brands fa-youtube"></i> 빅데이터 영상
-  </a>
-</div>
+        <div class="video-btn-container">
+            <a href="https://www.youtube.com/watch?v=IiyYsAMmmw4" class="youtube-btn">
+                <i class="fa-brands fa-youtube"></i> 기계학습 영상
+            </a>
+            <a href="https://www.youtube.com/watch?v=6MrCdXBlmqM&list=PLi9w7Ax2qVA9z-gT2YxmSyB0WJC3omJrX&index=5" class="youtube-btn">
+                <i class="fa-brands fa-youtube"></i> 빅데이터 영상
+            </a>
+        </div>
     </header>
 
     <nav id="navbar">
@@ -621,6 +652,57 @@
                     <div id="q3_3" class="explanation">
                         <strong>정답: 해당 데이터 행 제거, 대표값(평균/중앙값/최빈값)으로 채우기(대체)</strong><br>
                         누락된 결측치는 삭제하거나 적절한 대표값으로 대체하여 처리합니다.
+                    </div>
+                </div>
+
+                <!-- 탐구 탐구 실습 활동 추가 부분 -->
+                <div class="quiz-item">
+                    <p class="question">Q4. [학생 탐구 활동] 데이터의 유형을 정형 데이터와 비정형 데이터로 구분하고, 데이터의 종류와 인공지능에 적용된 실생활 사례를 작성해 봅시다.</p>
+                    <table class="activity-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 20%;">데이터 유형</th>
+                                <th style="width: 35%;">데이터 종류</th>
+                                <th style="width: 45%;">인공지능 적용 사례</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center; font-weight: bold;">정형 데이터</td>
+                                <td><textarea placeholder="예: 데이터의 종류 작성..."></textarea></td>
+                                <td><textarea placeholder="예: 인공지능 적용 사례 작성..."></textarea></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; font-weight: bold;">비정형 데이터</td>
+                                <td><textarea placeholder="예: 데이터의 종류 작성..."></textarea></td>
+                                <td><textarea placeholder="예: 인공지능 적용 사례 작성..."></textarea></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="answer-btn" onclick="toggleAns('q3_4')">예시 답안 보기</button>
+                    <div id="q3_4" class="explanation">
+                        <strong>[예시 답안]</strong>
+                        <table class="activity-table" style="margin-top: 8px;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">데이터 유형</th>
+                                    <th style="width: 35%;">데이터 종류</th>
+                                    <th style="width: 45%;">인공지능 적용 사례</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="text-align: center; font-weight: bold;">정형 데이터</td>
+                                    <td>병원 의료 기록<br>(환자 ID, 진료 날짜, 검사 수치 등)</td>
+                                    <td>2018년 구글은 환자의 진료 기록을 딥러닝으로 분석하여 입원 환자의 치료 결과를 정확히 예측하는 인공지능을 발표함.</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center; font-weight: bold;">비정형 데이터</td>
+                                    <td>얼굴 이미지<br>(사진 파일, JPG, PNG 등)</td>
+                                    <td>2019년 네이버는 입력된 사람의 얼굴 이미지 데이터를 인공지능으로 분석하여 이미지 속 얼굴과 가장 닮은 유명인을 찾거나 얼굴의 윤곽이나 표정 값을 얻는 기술을 개발함.</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
