@@ -340,6 +340,26 @@
         .youtube-btn i {
             font-size: 18px;
         }
+        /* 주관식 입력창 스타일 */
+.short-answer-input {
+    width: 100%;
+    max-width: 500px;
+    padding: 10px 14px;
+    margin-top: 8px;
+    margin-bottom: 6px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    display: block;
+}
+
+.short-answer-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
     </style>
 </head>
 <body>
@@ -648,6 +668,16 @@
 
                 <div class="quiz-item">
                     <p class="question">Q3. [주관식] 수집된 데이터에 값이 비어있는 '결측값'이 발생했을 때 처리할 수 있는 방법 2가지를 쓰시오.</p>
+                    <div class="quiz-item">
+    <p class="question">Q3. [주관식] 수집된 데이터에 값이 비어있는 '결측값'이 발생했을 때 처리할 수 있는 방법 2가지를 쓰시오.</p>
+    <!-- 학생 입력창 -->
+    <input type="text" class="short-answer-input" placeholder="정답을 입력하세요 (예: 데이터 삭제, 대표값 대체)">
+    <button class="answer-btn" onclick="toggleAns('q3_3')">정답 및 해설 보기</button>
+    <div id="q3_3" class="explanation">
+        <strong>정답: 해당 데이터 행 제거, 대표값(평균/중앙값/최빈값)으로 채우기(대체)</strong><br>
+        누락된 결측치는 삭제하거나 적절한 대표값으로 대체하여 처리합니다.
+    </div>
+</div>
                     <button class="answer-btn" onclick="toggleAns('q3_3')">정답 및 해설 보기</button>
                     <div id="q3_3" class="explanation">
                         <strong>정답: 해당 데이터 행 제거, 대표값(평균/중앙값/최빈값)으로 채우기(대체)</strong><br>
