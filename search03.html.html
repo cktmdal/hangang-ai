@@ -999,6 +999,55 @@ df3
                     sns.heatmap(data = irisData, annot = True, fmt = '.2f', linewidth = .5, 
                      cmap = 'RdYlGn_r')
                     plt.show()
+
+#13모델학습과 성능평가의 훈련데이터화 테스트 데이터
+       X = df3[['꽃잎 길이', '꽃잎 너비']] # 독립 변수(핵심 속성)
+      y = df3['종류'] # 종속 변수
+
+      from sklearn.model_selection import train_test_split 
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, 
+    random_state = 7)
+
+#14 기계학습을 통한 모델 생성
+              
+        from sklearn.neighbors import KNeighborsClassifier
+        model = KNeighborsClassifier( ) # k-최근접 이웃 모델 생성 
+
+        model.fit(X_train, y_train)
+
+#15 학습모델 성능평가 개선
+       acc = model.score(X_test, y_test) # 모델의 정확도를 계산하여 저장
+       print('테스트 데이터 점수: {:.3f}'.format(acc)) # 정확도(소수점 셋째 자리까지 출력)    
+
+
+            from sklearn.metrics import confusion_matrix, classification_report
+            predicted = model.predict(X_test) # 테스트 데이터에 대한 예측값
+            classNames = pd.unique(df3['종류']) 
+            cm = confusion_matrix(y_test, predicted, labels=classNames) # 혼동행렬
+            df_cm = pd.DataFrame(cm, index = [i for i in classNames], 
+             columns = [i for i in classNames])
+            sns.heatmap(data = df_cm, annot = True, fmt = '0.2f', cmap = 'YlGnBu')
+            plt.xlabel('예측값') 
+            plt.ylabel('실젯값')
+            plt.show( )   
+
+#16 모델개선하기
+
+        import numpy as np
+        acc = [ ]
+        k_range = range(1, 20) # 이웃의 수 
+        for k in k_range: # 이웃의 수(k)를 1~19까지 변화시키기 위한 반복문
+         model = KNeighborsClassifier(n_neighbors = k) # 이웃의 수를 k로 지정
+         model.fit(X_train, y_train) # 훈련 데이터를 이용하여 학습
+         acc.append(model.score(X_test, y_test)) # 테스트 데이터를 이용한 정확도
+        plt.scatter(k_range, acc) # k_range와 acc의 관계 산점도
+        plt.xlabel('이웃의 수') # x축 라벨
+        plt.ylabel('정확도') # y축 라벨
+        plt.show( )
+
+#17 모델 활용하기
+            new = [[1.0, 1.5]]
+            print(model.predict(new))
 </code></pre>
             </div>
 
