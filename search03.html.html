@@ -937,119 +937,123 @@ df = pd.concat([df1, df2]) # df1과 df2를 위아래 방향으로 합치기
 df
                     
 #4. 결측치 확인하기
-  df.isna().sum() 
+df.isna().sum() 
                     
- #5. 결측치 처리하기   
- df3 = df.dropna(axis = 0, inplace = False) 
- df3
+#5. 결측치 처리하기   
+df3 = df.dropna(axis = 0, inplace = False) 
+df3
                     
 #5-1 결측히 제거 확인하기
-  df3.isna().sum()
-   #6. 기초 통계량으로 이상치 확인하기
-       df3.describe()  
+df3.isna().sum()
+                    
+#6. 기초 통계량으로 이상치 확인하기
+df3.describe()
 
-     #7. groupby( ) 함수를 사용 종류별로 통계 정보를 확인
-    df3.groupby('종류')['꽃받침 길이'].describe()
+#7. groupby( ) 함수를 사용 종류별로 통계 정보를 확인
+df3.groupby('종류')['꽃받침 길이'].describe()   
+#df3.groupby('종류')['꽃잎 길이'].describe()
 
-     #8. 히스토그램으로 이상치 확인하기
-           !pip install koreanize-matplotlib # 한글 폰트 설정 라이브러리 설치
+#8. 히스토그램으로 이상치 확인하기
+!pip install koreanize-matplotlib # 한글 폰트 설정 라이브러리 설치
 
 
-        import koreanize_matplotlib # 한글 출력 가능한 그래프 모듈
-        import matplotlib.pyplot as plt # 그래프 그리기에 필요한 모듈
-        import seaborn as sns # 시각화를 위해 필요한 모듈   
+import koreanize_matplotlib # 한글 출력 가능한 그래프 모듈
+import matplotlib.pyplot as plt # 그래프 그리기에 필요한 모듈
+import seaborn as sns # 시각화를 위해 필요한 모듈   
     
-        sns.histplot(data = df3, x = '꽃받침 길이', hue = '종류') # ➊
+sns.histplot(data = df3, x = '꽃받침 길이', hue = '종류') # ➊
     
-        sns.histplot(data = df3, x = '꽃받침 너비', hue = '종류') # ➋
+sns.histplot(data = df3, x = '꽃받침 너비', hue = '종류') # ➋
                         
-       sns.histplot(data = df3, x = '꽃잎 길이', hue = '종류') # ➌
+sns.histplot(data = df3, x = '꽃잎 길이', hue = '종류') # ➌
     
-       sns.histplot(data = df3, x = '꽃잎 너비', hue = '종류') # ➍ 
+sns.histplot(data = df3, x = '꽃잎 너비', hue = '종류') # ➍ 
 
-  #9.박스 플롯으로 이상치 확정하기
-        sns.catplot(data = df3, x = '종류', y = '꽃받침 길이', kind = 'box', hue = '종류') # ➊
-        sns.catplot(data = df3, x = '종류', y = '꽃받침 너비', kind = 'box', hue = '종류') # ➋
-        sns.catplot(data = df3, x = '종류', y = '꽃잎 길이', kind = 'box', hue = '종류') # ➌
-        sns.catplot(data = df3, x = '종류', y = '꽃잎 너비', kind = 'box', hue = '종류') # ➍
+#9.박스 플롯으로 이상치 확정하기
+sns.catplot(data = df3, x = '종류', y = '꽃받침 길이', kind = 'box', hue = '종류') # ➊
+sns.catplot(data = df3, x = '종류', y = '꽃받침 너비', kind = 'box', hue = '종류') # ➋
+sns.catplot(data = df3, x = '종류', y = '꽃잎 길이', kind = 'box', hue = '종류') # ➌
+sns.catplot(data = df3, x = '종류', y = '꽃잎 너비', kind = 'box', hue = '종류') # ➍
                     
 #10 이상치 제거하기 (사분위수 범위)
-               Q1 = df3.groupby('종류')['꽃받침 길이'].quantile(0.25) # 제1사분위수
-                Q3 = df3.groupby('종류')['꽃받침 길이'].quantile(0.75) # 제3사분위수
-                IQR = Q3 – Q1 # 사분위수 범위
-                print('Q1:', Q1); print('Q3:', Q3); print('IQR:', IQR)    
+Q1 = df3.groupby('종류')['꽃받침 길이'].quantile(0.25) # 제1사분위수
+Q3 = df3.groupby('종류')['꽃받침 길이'].quantile(0.75) # 제3사분위수
+IQR = Q3 – Q1 # 사분위수 범위
+print('Q1:', Q1); print('Q3:', Q3); print('IQR:', IQR)    
                     
-                    (안팎 울타리값)
-                lower = Q1 – 1.5 * IQR; upper = Q3 + 1.5 * IQR 
-               print('lower:', lower); print('upper:', upper) 
+(안팎 울타리값)
+lower = Q1 – 1.5 * IQR; upper = Q3 + 1.5 * IQR 
+print('lower:', lower); print('upper:', upper) 
 
-                  (이상치 찾기)  
-                 df4 = df3[df3['종류'] == '버시컬러']
-                df4[(df4['꽃받침 길이'] < lower['버시컬러'] ) | (df4['꽃받침 길이'] > upper['버시컬러'])]
+(이상치 찾기)  
+df4 = df3[df3['종류'] == '버시컬러']
+df4[(df4['꽃받침 길이'] < lower['버시컬러'] ) | (df4['꽃받침 길이'] > upper['버시컬러'])]
 
-                (이상치 제거)
-                    df3 = df3.drop(index = [3, 5, 6, 10, 13, 14, 18, 20, 22, 23, 24, 35, 43, 44, 98, 106], axis = 0) # 제거하려는 인덱스 설정
+(이상치 제거)
+df3 = df3.drop(index = [3, 5, 6, 10, 13, 14, 18, 20, 22, 23, 24, 35, 43, 44, 98, 106], axis = 0) # 제거하려는 인덱스 설정
                     
 #11 산점도로 속성 간의 관계 알아보기
 
-    sns.pairplot(df3, hue = '종류', markers = ['o', 's', 'D'])
-    plt.show()
+sns.pairplot(df3, hue = '종류', markers = ['o', 's', 'D'])
+plt.show()
                     
 #12 히트맵을 활용하여 속성 간의 관계 알아보기 
-                    irisData = df3.corr(method = 'pearson', numeric_only = True)
-                    plt.figure(figsize = (10, 10))
-                    sns.heatmap(data = irisData, annot = True, fmt = '.2f', linewidth = .5, 
-                     cmap = 'RdYlGn_r')
-                    plt.show()
+irisData = df3.corr(method = 'pearson', numeric_only = True)
+plt.figure(figsize = (10, 10))
+sns.heatmap(data = irisData, annot = True, fmt = '.2f', linewidth = .5, 
+cmap = 'RdYlGn_r')
+plt.show()
 
 #13모델학습과 성능평가의 훈련데이터화 테스트 데이터
-       X = df3[['꽃잎 길이', '꽃잎 너비']] # 독립 변수(핵심 속성)
-      y = df3['종류'] # 종속 변수
+X = df3[['꽃잎 길이', '꽃잎 너비']] # 독립 변수(핵심 속성)
+y = df3['종류'] # 종속 변수
 
-      from sklearn.model_selection import train_test_split 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, 
-    random_state = 7)
+from sklearn.model_selection import train_test_split 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 7)
 
 #14 기계학습을 통한 모델 생성
               
-        from sklearn.neighbors import KNeighborsClassifier
-        model = KNeighborsClassifier( ) # k-최근접 이웃 모델 생성 
+from sklearn.neighbors import KNeighborsClassifier
+model = KNeighborsClassifier( ) # k-최근접 이웃 모델 생성 
 
-        model.fit(X_train, y_train)
+model.fit(X_train, y_train)
 
-#15 학습모델 성능평가 개선
-       acc = model.score(X_test, y_test) # 모델의 정확도를 계산하여 저장
-       print('테스트 데이터 점수: {:.3f}'.format(acc)) # 정확도(소수점 셋째 자리까지 출력)    
+#15 학습모델 성능평가 개선 
+# 혼동행렬(Confusion Matrix)은 AI(인공지능)가 시험을 보고 나서 "어떤 문제를 맞히고, 어떤 문제에서 착각(혼동)했는지" 한눈에 보여주는 성적표
+
+acc = model.score(X_test, y_test) # 모델의 정확도를 계산하여 저장
+print('테스트 데이터 점수: {:.3f}'.format(acc)) # 정확도(소수점 셋째 자리까지 출력)  
 
 
-            from sklearn.metrics import confusion_matrix, classification_report
-            predicted = model.predict(X_test) # 테스트 데이터에 대한 예측값
-            classNames = pd.unique(df3['종류']) 
-            cm = confusion_matrix(y_test, predicted, labels=classNames) # 혼동행렬
-            df_cm = pd.DataFrame(cm, index = [i for i in classNames], 
-             columns = [i for i in classNames])
-            sns.heatmap(data = df_cm, annot = True, fmt = '0.2f', cmap = 'YlGnBu')
-            plt.xlabel('예측값') 
-            plt.ylabel('실젯값')
-            plt.show( )   
+from sklearn.metrics import confusion_matrix, classification_report
+predicted = model.predict(X_test) # 테스트 데이터에 대한 예측값
+classNames = pd.unique(df3['종류'])
+cm = confusion_matrix(y_test, predicted, labels=classNames) # 혼동행렬
+df_cm = pd.DataFrame(cm, index = [i for i in classNames],
+columns = [i for i in classNames])
+sns.heatmap(data = df_cm, annot = True, fmt = '0.2f', cmap = 'YlGnBu')
+plt.xlabel('예측값')
+plt.ylabel('실젯값')
+plt.show( )
+    
+#16 모델 개선하기
 
-#16 모델개선하기
+import numpy as np
+acc = [ ]
+k_range = range(1, 20) # 이웃의 수
+for k in k_range: # 이웃의 수(k)를 1~19까지 변화시키기 위한 반복문
+  model = KNeighborsClassifier(n_neighbors = k) # 이웃의 수를 k로 지정
+  model.fit(X_train, y_train) # 훈련 데이터를 이용하여 학습
+  acc.append(model.score(X_test, y_test)) # 테스트 데이터를 이용한 정확도
+plt.scatter(k_range, acc) # k_range와 acc의 관계 산점도
+plt.xlabel('이웃의 수') # x축 라벨
+plt.ylabel('정확도') # y축 라벨
+plt.show( )
 
-        import numpy as np
-        acc = [ ]
-        k_range = range(1, 20) # 이웃의 수 
-        for k in k_range: # 이웃의 수(k)를 1~19까지 변화시키기 위한 반복문
-         model = KNeighborsClassifier(n_neighbors = k) # 이웃의 수를 k로 지정
-         model.fit(X_train, y_train) # 훈련 데이터를 이용하여 학습
-         acc.append(model.score(X_test, y_test)) # 테스트 데이터를 이용한 정확도
-        plt.scatter(k_range, acc) # k_range와 acc의 관계 산점도
-        plt.xlabel('이웃의 수') # x축 라벨
-        plt.ylabel('정확도') # y축 라벨
-        plt.show( )
 
 #17 모델 활용하기
-            new = [[1.0, 1.5]]
-            print(model.predict(new))
+new = [[1.0, 1.5]]
+print(model.predict(new))
 </code></pre>
             </div>
 
