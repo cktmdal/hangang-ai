@@ -988,7 +988,41 @@ print('lower:', lower); print('upper:', upper)
 (이상치 찾기)  
 df4 = df3[df3['종류'] == '버시컬러']
 df4[(df4['꽃받침 길이'] < lower['버시컬러'] ) | (df4['꽃받침 길이'] > upper['버시컬러'])]
+    
+"""
+    def find_outliers_multi_column(df, species_list, column_list):
+    all_outliers = {}
+    for species in species_list:
+        species_outliers = {}
+        for column in column_list:
+            Q1 = df[df['종류'] == species][column].quantile(0.25)
+            Q3 = df[df['종류'] == species][column].quantile(0.75)
+            IQR = Q3 - Q1
+            lower_bound = Q1 - 1.5 * IQR
+            upper_bound = Q3 + 1.5 * IQR
 
+            species_df = df[df['종류'] == species]
+            outliers = species_df[(species_df[column] < lower_bound) | (species_df[column] > upper_bound)]
+            
+            if not outliers.empty:
+                species_outliers[column] = outliers
+        if species_outliers:
+            all_outliers[species] = species_outliers
+    return all_outliers
+
+species_to_check = ['세토사', '버시컬러', '버지니카']
+columns_to_check = ['꽃받침 길이', '꽃받침 너비', '꽃잎 길이', '꽃잎 너비']
+
+outliers_found = find_outliers_multi_column(df3, species_to_check, columns_to_check)
+
+for species, columns_data in outliers_found.items():
+    print(f"\n--- Outliers for {species} ---")
+    for column, outliers_df in columns_data.items():
+        print(f"Outliers in '{column}':")
+        display(outliers_df)
+
+"""
+    
 (이상치 제거)
 df3 = df3.drop(index = [3, 5, 6, 10, 13, 14, 18, 20, 22, 23, 24, 35, 43, 44, 98, 106], axis = 0) # 제거하려는 인덱스 설정
                     
