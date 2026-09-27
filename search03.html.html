@@ -937,12 +937,14 @@ df = pd.concat([df1, df2]) # df1과 df2를 위아래 방향으로 합치기
 df
                     
 #4. 결측치 확인하기
- 1 df.isna().sum() 
+  df.isna().sum() 
                     
  #5. 결측치 처리하기   
  df3 = df.dropna(axis = 0, inplace = False) 
-df3
-
+ df3
+                    
+#5-1 결측히 제거 확인하기
+  df3.isna().sum()
    #6. 기초 통계량으로 이상치 확인하기
        df3.describe()  
 
