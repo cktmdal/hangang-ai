@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기계학습 분류 모델의 평가 지표 학습</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f7f9;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        p {
+            margin-bottom: 10px;
+        }
+        .tip-box {
+            background-color: #eef7fe;
+            border-left: 4px solid #3498db;
+            padding: 12px 15px;
+            margin: 15px 0;
+            font-size: 14px;
+            border-radius: 0 8px 8px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: #fafafa;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f0f4f8;
+            color: #333;
+            font-weight: bold;
+        }
+        .highlight-tp { background-color: #e8f8f5; }
+        .highlight-tn { background-color: #eaf2f8; }
+        .highlight-fp { background-color: #fdedec; }
+        .highlight-fn { background-color: #fef9e7; }
+        
+        .quiz-card {
+            background: #f9fbfd;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .quiz-question {
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .quiz-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+        input[type="number"], input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 120px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result-msg {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .correct { color: #27ae60; }
+        .incorrect { color: #e74c3c; }
+        
+        .formula-box {
+            background: #f8f9fa;
+            border: 1px dashed #ced4da;
+            padding: 12px;
+            text-align: center;
+            margin: 10px 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>학습 모델의 성능을 평가하고 개선하기</h1>
+    <p>테스트 데이터를 사용하여 분류 모델의 성능을 평가하고, 적절한 평가 지표(정확도, 정밀도, 재현율, F1-점수)를 통해 모델을 다각도로 분석할 수 있습니다.</p>
+
+    <h2>1. 혼동행렬(Confusion Matrix)의 이해</h2>
+    <p>실제 값과 모델의 예측 값에 따라 결과를 4가지 영역으로 구분합니다.</p>
+    <table>
+        <thead>
+            <tr>
+                <th colspan="2" rowspan="2">구분</th>
+                <th colspan="2">예측값</th>
+            </tr>
+            <tr>
+                <th>참 (Positive)</th>
+                <th>거짓 (Negative)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th rowspan="2">실제값</th>
+                <th>참 (Positive)</th>
+                <td class="highlight-tp"><b>TP (True Positive)</b><br>참으로 예측, 실제 참</td>
+                <td class="highlight-fn"><b>FN (False Negative)</b><br>거짓으로 예측, 실제 참</td>
+            </tr>
+            <tr>
+                <th>거짓 (Negative)</th>
+                <td class="highlight-fp"><b>FP (False Positive)</b><br>참으로 예측, 실제 거짓</td>
+                <td class="highlight-tn"><b>TN (True Negative)</b><br>거짓으로 예측, 실제 거짓</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>2. 성능 평가 지표 계산 공식</h2>
+    <div class="formula-box">
+        정확도 (Accuracy) = (TP + TN) / (TP + TN + FP + FN)<br><br>
+        정밀도 (Precision) = TP / (TP + FP)<br><br>
+        재현율 (Recall) = TP / (TP + FN)<br><br>
+        F1-점수 = 2 × (정밀도 × 재현율) / (정밀도 + 재현율)
+    </div>
+
+    <div class="tip-box">
+        <b>지도 TIP:</b> 질병 진단 모델에서는 실제 병이 있는 환자를 병이 없다고 잘못 예측하는 위험을 줄이기 위해 <b>재현율(Recall)</b>이 중요하며, 스팸 메일 분류 모델에서는 일반 메일을 스팸으로 오분류하는 문제를 방지하기 위해 <b>정밀도(Precision)</b>가 중요한 지표가 됩니다.
+    </div>
+
+    <!-- 실습 문제 1 -->
+    <div class="quiz-card">
+        <div class="quiz-question">Q1. [지표 계산] 아래 스팸 메일 분류 모델의 혼동행렬을 보고 '정밀도(Precision)'를 소수점 둘째 자리까지 계산하세요.</div>
+        <table>
+            <tr>
+                <th colspan="2" rowspan="2">스팸 메일 분류</th>
+                <th colspan="2">예측값</th>
+            </tr>
+            <tr>
+                <th>스팸O (Positive)</th>
+                <th>스팸X (Negative)</th>
+            </tr>
+            <tr>
+                <th rowspan="2">실제값</th>
+                <th>스팸O</th>
+                <td>9 (TP)</td>
+                <td>1 (FN)</td>
+            </tr>
+            <tr>
+                <th>스팸X</th>
+                <td>30 (FP)</td>
+                <td>60 (TN)</td>
+            </tr>
+        </table>
+        <p style="font-size: 13px; color: #666;">* 힌트: 정밀도 = TP / (TP + FP) = 9 / (9 + 30) = 9 / 39</p>
+        <div class="quiz-input">
+            <input type="number" id="q1-input" step="0.01" placeholder="예: 0.23">
+            <button onclick="checkQ1()">정답 확인</button>
+        </div>
+        <div id="q1-result" class="result-msg"></div>
+    </div>
+
+    <!-- 실습 문제 2 -->
+    <div class="quiz-card">
+        <div class="quiz-question">Q2. [상황 판단] 실제 환자에게 "병이 없다"고 잘못 예측(FN)하는 것이 치명적인 결과를 초래할 수 있는 '질병 예측 모델'에서 가장 우선적으로 고려해야 하는 평가 지표는 무엇일까요?</div>
+        <div class="quiz-input">
+            <select id="q2-input" style="padding: 8px 12px; border-radius: 4px; border: 1px solid #ccc;">
+                <option value="">-- 선택하세요 --</option>
+                <option value="정확도">정확도 (Accuracy)</option>
+                <option value="정밀도">정밀도 (Precision)</option>
+                <option value="재현율">재현율 (Recall)</option>
+            </select>
+            <button onclick="checkQ2()">정답 확인</button>
+        </div>
+        <div id="q2-result" class="result-msg"></div>
+    </div>
+</div>
+
+<script>
+    function checkQ1() {
+        const userInput = parseFloat(document.getElementById('q1-input').value);
+        const resultDiv = document.getElementById('q1-result');
+        const correctAnswer = 0.23; // 9 / 39 ≈ 0.2307...
+        
+        if (isNaN(userInput)) {
+            resultDiv.className = 'result-msg incorrect';
+            resultDiv.innerText = '숫자를 입력해 주세요.';
+            return;
+        }
+
+        if (Math.abs(userInput - correctAnswer) <= 0.01) {
+            resultDiv.className = 'result-msg correct';
+            resultDiv.innerText = '정답입니다! 정밀도는 약 0.23 (9/39)입니다.';
+        } else {
+            resultDiv.className = 'result-msg incorrect';
+            resultDiv.innerText = '오답입니다. 계산을 다시 확인해 보세요. (9 / 39 ≈ 0.23)';
+        }
+    }
+
+    function checkQ2() {
+        const userInput = document.getElementById('q2-input').value;
+        const resultDiv = document.getElementById('q2-result');
+
+        if (!userInput) {
+            resultDiv.className = 'result-msg incorrect';
+            resultDiv.innerText = '보기 중 하나를 선택해 주세요.';
+            return;
+        }
+
+        if (userInput === '재현율') {
+            resultDiv.className = 'result-msg correct';
+            resultDiv.innerText = '정답입니다! 실제 양성 환자를 놓치지 않는 것이 핵심이므로 재현율(Recall)이 가장 중요합니다.';
+        } else {
+            resultDiv.className = 'result-msg incorrect';
+            resultDiv.innerText = '오답입니다. 실제 참(Positive)인 데이터 중 얼마나 참으로 잘 예측했는지를 나타내는 지표를 생각해 보세요.';
+        }
+    }
+</script>
+
+</body>
+</html>
