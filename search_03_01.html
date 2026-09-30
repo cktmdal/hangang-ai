@@ -121,6 +121,123 @@
             margin: 10px 0;
             font-family: 'Courier New', Courier, monospace;
         }
+        * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #f4f7f6;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 750px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #2c3e50;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 10px;
+      margin-top: 0;
+    }
+    .scenario {
+      background-color: #eef7fc;
+      padding: 15px;
+      border-left: 4px solid #3498db;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      text-align: center;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 12px;
+    }
+    th {
+      background-color: #f1f5f9;
+      color: #334155;
+    }
+    .matrix-title {
+      font-weight: bold;
+      background-color: #e2e8f0;
+    }
+    .question-card {
+      background: #fafafa;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    .question-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #1e293b;
+    }
+    .formula {
+      font-size: 0.9em;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+    input[type="number"], select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .btn-submit {
+      width: 100%;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 10px;
+    }
+    .btn-submit:hover {
+      background-color: #2980b9;
+    }
+    .feedback {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      display: none;
+    }
+    .feedback.correct {
+      background-color: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    .feedback.incorrect {
+      background-color: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+    .explanation {
+      font-size: 0.9em;
+      font-weight: normal;
+      margin-top: 5px;
+      color: #374151;
+    }
     </style>
 </head>
 <body>
@@ -166,9 +283,157 @@
     </div>
 
     <div class="tip-box">
-        <b>지도 TIP:</b> 질병 진단 모델에서는 실제 병이 있는 환자를 병이 없다고 잘못 예측하는 위험을 줄이기 위해 <b>재현율(Recall)</b>이 중요하며, 스팸 메일 분류 모델에서는 일반 메일을 스팸으로 오분류하는 문제를 방지하기 위해 <b>정밀도(Precision)</b>가 중요한 지표가 됩니다.
+        <b> TIP:</b> 질병 진단 모델에서는 실제 병이 있는 환자를 병이 없다고 잘못 예측하는 위험을 줄이기 위해 <b>재현율(Recall)</b>이 중요하며, 스팸 메일 분류 모델에서는 일반 메일을 스팸으로 오분류하는 문제를 방지하기 위해 <b>정밀도(Precision)</b>가 중요한 지표가 됩니다.
+    </div>
+<div class="container">
+  <h1>📊 혼동 행렬(Confusion Matrix) 실습</h1>
+  
+  <div class="scenario">
+    <strong>[상황]</strong> 의료 AI 연구팀에서 암 환자를 진단하는 이진 분류 모델을 개발했습니다.<br>
+    총 <strong>100명의 환자 데이터</strong>를 바탕으로 예측한 아래 결과를 보고 문제에 답해보세요.<br>
+    <em>* 소수점 둘째 자리까지 입력하세요. (예: 0.85)</em>
+  </div>
+
+  <table>
+    <tr>
+      <th colspan="2" rowspan="2"></th>
+      <th colspan="2" class="matrix-title">예측 (Predicted)</th>
+    </tr>
+    <tr>
+      <th>암 (Positive)</th>
+      <th>정상 (Negative)</th>
+    </tr>
+    <tr>
+      <th rowspan="2" class="matrix-title">실제<br>(Actual)</th>
+      <th>암 (Positive)</th>
+      <td><strong>40</strong> (TP)</td>
+      <td><strong>10</strong> (FN)</td>
+    </tr>
+    <tr>
+      <th>정상 (Negative)</th>
+      <td><strong>5</strong> (FP)</td>
+      <td><strong>45</strong> (TN)</td>
+    </tr>
+  </table>
+
+  <form id="quizForm">
+    <!-- Q1 -->
+    <div class="question-card">
+      <div class="question-title">1. 정확도 (Accuracy)</div>
+      <div class="formula">계산식: (TP + TN) / (TP + TN + FP + FN)</div>
+      <input type="number" step="0.01" id="q1" placeholder="답을 입력하세요 (예: 0.85)">
+      <div id="fb1" class="feedback"></div>
     </div>
 
+    <!-- Q2 -->
+    <div class="question-card">
+      <div class="question-title">2. 정밀도 (Precision)</div>
+      <div class="formula">계산식: TP / (TP + FP)</div>
+      <input type="number" step="0.01" id="q2" placeholder="답을 입력하세요 (예: 0.89)">
+      <div id="fb2" class="feedback"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-card">
+      <div class="question-title">3. 재현율 (Recall)</div>
+      <div class="formula">계산식: TP / (TP + FN)</div>
+      <input type="number" step="0.01" id="q3" placeholder="답을 입력하세요 (예: 0.80)">
+      <div id="fb3" class="feedback"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-card">
+      <div class="question-title">4. F1-Score</div>
+      <div class="formula">계산식: 2 * (Precision * Recall) / (Precision + Recall)</div>
+      <input type="number" step="0.01" id="q4" placeholder="답을 입력하세요 (예: 0.84)">
+      <div id="fb4" class="feedback"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-card">
+      <div class="question-title">5. [서술형] 실제 암 환자를 정상으로 잘못 진단하는 경우(FN)가 치명적일 때 더 중요한 지표는?</div>
+      <select id="q5_select" style="margin-bottom: 10px;">
+        <option value="">-- 선택하세요 --</option>
+        <option value="precision">정밀도 (Precision)</option>
+        <option value="recall">재현율 (Recall)</option>
+        <option value="accuracy">정확도 (Accuracy)</option>
+      </select>
+      <textarea id="q5_text" placeholder="선택한 이유를 함께 적어보세요."></textarea>
+      <div id="fb5" class="feedback"></div>
+    </div>
+
+    <button type="button" class="btn-submit" onclick="checkAnswers()">정답 제출 및 채점</button>
+  </form>
+</div>
+
+<script>
+  function checkAnswers() {
+    // 정답 및 오차 허용범위 설정
+    const answers = {
+      q1: 0.85,
+      q2: 0.89, // 40/45 = 0.8888...
+      q3: 0.80, // 40/50 = 0.8
+      q4: 0.84  // 2*(0.8889*0.8)/(0.8889+0.8) = 0.842...
+    };
+
+    // Q1 채점
+    validateNumeric('q1', 'fb1', answers.q1, "정답: 0.85 (계산: 85 / 100)");
+
+    // Q2 채점 (0.88 ~ 0.89 허용)
+    const q2Val = parseFloat(document.getElementById('q1').value);
+    validateRange('q2', 'fb2', 0.88, 0.89, "정답: 0.89 또는 0.88 (계산: 40 / 45)");
+
+    // Q3 채점
+    validateNumeric('q3', 'fb3', answers.q3, "정답: 0.80 (계산: 40 / 50)");
+
+    // Q4 채점 (0.84 ~ 0.85 허용)
+    validateRange('q4', 'fb4', 0.84, 0.85, "정답: 0.84 (계산: 2 * (0.89 * 0.8) / (0.89 + 0.8))");
+
+    // Q5 채점
+    const q5Select = document.getElementById('q5_select').value;
+    const q5Text = document.getElementById('q5_text').value.trim();
+    const fb5 = document.getElementById('fb5');
+    
+    fb5.style.display = 'block';
+    if (q5Select === 'recall') {
+      fb5.className = 'feedback correct';
+      fb5.innerHTML = `정답입니다! 
+        <div class="explanation"><strong>해설:</strong> 실제 암 환자를 놓치는 위험(False Negative)을 최소화해야 하므로, 양성 환자를 얼마나 잘 찾아내는지 나타내는 <strong>재현율(Recall)</strong>이 가장 중요합니다.</div>`;
+    } else {
+      fb5.className = 'feedback incorrect';
+      fb5.innerHTML = `오답입니다. (선택: 재현율)
+        <div class="explanation"><strong>해설:</strong> 실제 암 환자를 음성으로 잘못 분류하면 치료 시기를 놓쳐 치명적입니다. 따라서 FN을 줄여주는 <strong>재현율(Recall)</strong>을 높여야 합니다.</div>`;
+    }
+  }
+
+  function validateNumeric(inputId, feedbackId, expected, explanation) {
+    const input = parseFloat(document.getElementById(inputId).value);
+    const fb = document.getElementById(feedbackId);
+    fb.style.display = 'block';
+
+    if (Math.abs(input - expected) < 0.011) {
+      fb.className = 'feedback correct';
+      fb.innerHTML = `정답입니다! <div class="explanation">${explanation}</div>`;
+    } else {
+      fb.className = 'feedback incorrect';
+      fb.innerHTML = `오답입니다. <div class="explanation">${explanation}</div>`;
+    }
+  }
+
+  function validateRange(inputId, feedbackId, minVal, maxVal, explanation) {
+    const input = parseFloat(document.getElementById(inputId).value);
+    const fb = document.getElementById(feedbackId);
+    fb.style.display = 'block';
+
+    if (input >= minVal && input <= maxVal) {
+      fb.className = 'feedback correct';
+      fb.innerHTML = `정답입니다! <div class="explanation">${explanation}</div>`;
+    } else {
+      fb.className = 'feedback incorrect';
+      fb.innerHTML = `오답입니다. <div class="explanation">${explanation}</div>`;
+    }
+  }
+</script>
     <!-- 실습 문제 1 -->
     <div class="quiz-card">
         <div class="quiz-question">Q1. [지표 계산] 아래 스팸 메일 분류 모델의 혼동행렬을 보고 '정밀도(Precision)'를 소수점 둘째 자리까지 계산하세요.</div>
