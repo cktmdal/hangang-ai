@@ -594,7 +594,7 @@
             </tbody>
           </table>
           <br/><br/>
-           <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
+           <div class="grid grid-cols-1 md:grid-cols-6 gap-6">
                     <div class="bg-slate-50 p-5 rounded-2xl border border-slate-400 text-center">
                       
                         <div class="bg-white rounded-xl border border-slate-200 mb-4 p-2">
@@ -605,8 +605,16 @@
                                 <text x="90" y="20" font-size="14" fill="#64748b">1</text>
                                 <text x="60" y="104" font-size="14" fill="#64748b">0</text>
                             </svg>
-                          <br/><br/>
-                                          <div>
+                
+                        <h4 class="font-bold text-slate-800 mb-2">계단 함수</h4>
+                        <p class="text-slate-600 text-base">기준을 넘으면 1, 아니면 0. 단호하지만 <strong>얼마나 넘었는지</strong>는 알려 주지 않습니다.</p>
+                    </div>
+                                     
+                      
+                         </div>
+
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-400 text-left">
+                        
                                            <b>  "ON / OFF 똑딱이 스위치"</b> <br/>
                                             
                                           <strong>개념: 기준선(0)을 넘으면 무조건 1(합격/전원 ON), 못 넘으면 무조건 0(불합격/전원 OFF)을 내보냅니다.</strong><br/>
@@ -619,14 +627,6 @@
                                           
                                           <strong>단점: 중간이 없기 때문에 "얼마나 잘했는지" 세밀한 차이를 표현할 수 없습니다.</strong><br/>
                                           </div>
-                                     
-                      
-                        <h4 class="font-bold text-slate-800 mb-2">계단 함수</h4>
-                        <p class="text-slate-600 text-base">기준을 넘으면 1, 아니면 0. 단호하지만 <strong>얼마나 넘었는지</strong>는 알려 주지 않습니다.</p>
-                    </div>
- </div>
-
-                      
                     <div class="bg-slate-50 p-5 rounded-2xl border border-slate-400 text-center">
                         <div class="bg-white rounded-xl border border-slate-200 mb-4 p-2">
                             <svg viewBox="0 0 160 110" class="w-full mx-auto block" style="min-width:200px; max-width:200px" role="img" aria-label="시그모이드 함수 그래프">
@@ -636,7 +636,16 @@
                                 <text x="90" y="20" font-size="14" fill="#64748b">1</text>
                                 <text x="60" y="104" font-size="14" fill="#64748b">0</text>
                             </svg>
-                                <div>
+                               
+                          
+                    
+                      
+                        <h4 class="font-bold text-slate-800 mb-2">시그모이드 함수</h4>
+                        <p class="text-slate-600 text-base">0과 1 사이를 <strong>부드럽게</strong> 오갑니다. 얼마나 그럴듯한지를 함께 담아 넘길 수 있습니다.</p>
+                    </div>
+                      
+                       </div>
+ <div   class="bg-slate-50 p-5 rounded-2xl border border-slate-400 text-left">
                                   <b> "부드러운 조명 조절기(디머)"</b> <br/>
                                                           
                               <strong>개념: S자 모양의 부드러운 곡선으로, 입력값이 아무리 크거나 작아도 결과를 0과 1 사이의 연속적인 값(확률)으로 바꿔줍니다.</strong><br/>
@@ -649,14 +658,6 @@
                               
                               <strong>단점: 값이 너무 커지거나 작아지면 변화 폭이 아주 미미해져서, 인공지능이 깊어질수록 학습이 잘 안 되는 문제(경사 손실 문제)가 생깁니다.</strong><br/>
                             </div>
-                          
-                    
-                      
-                        <h4 class="font-bold text-slate-800 mb-2">시그모이드 함수</h4>
-                        <p class="text-slate-600 text-base">0과 1 사이를 <strong>부드럽게</strong> 오갑니다. 얼마나 그럴듯한지를 함께 담아 넘길 수 있습니다.</p>
-                    </div>
-                       </div>
-
                     <div class="bg-indigo-50 p-5 rounded-2xl border border-indigo-300 text-center">
                         <div class="bg-white rounded-xl border border-indigo-200 mb-4 p-2">
                             <svg viewBox="0 0 160 110" class="w-full mx-auto block" style="min-width:200px; max-width:200px" role="img" aria-label="렐루 함수 그래프">
@@ -665,7 +666,13 @@
                                 <path d="M10 90 H80 L145 22" fill="none" stroke="#4f46e5" stroke-width="3"/>
                                 <text x="60" y="104" font-size="14" fill="#64748b">0</text>
                             </svg>
-                               <div>
+                              
+                        </div>
+                        <h4 class="font-bold text-indigo-800 mb-2">ReLU(렐루) 함수</h4>
+                        <p class="text-slate-600 text-base">음수는 0으로 잘라 내고, 양수는 있는 그대로 넘깁니다. <strong>0에서 한 번 꺾인다</strong>는 점이 핵심입니다.</p>
+                    </div>
+             
+                      <div  class="bg-slate-50 p-5 rounded-2xl border border-slate-400 text-left">
                                   <b> "음수는 차단하고, 양수는 들어오는 대로!"</b> <br/>
                                                           
                               <strong>개념: 음수($x < 0$)가 들어오면 무조건 0으로 차단하고, 양수($x \ge 0$)가 들어오면 들어온 값 그대로 통과시킵니다.</strong><br/>
@@ -677,12 +684,7 @@
                           이익이 나는 행동(양수)은 성과를 낸 만큼 그대로 인정해 줍니다. (예: 10 만큼 잘하면 10, 100 만큼 잘하면 100을 출력)</span><br/>
                               
                               <strong>단점: 계산이 훨씬 단순하고 빠르며, 시그모이드처럼 깊은 신경망에서 학습이 멈추는 현상이 없어 현재 딥러닝에서 가장 많이 쓰이는 스위치입니다.</strong><br/>
-                            </div>
-                          
-                        </div>
-                        <h4 class="font-bold text-indigo-800 mb-2">ReLU(렐루) 함수</h4>
-                        <p class="text-slate-600 text-base">음수는 0으로 잘라 내고, 양수는 있는 그대로 넘깁니다. <strong>0에서 한 번 꺾인다</strong>는 점이 핵심입니다.</p>
-                    </div>
+                            </div>     
               
         </div>
 
