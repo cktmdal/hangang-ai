@@ -511,7 +511,45 @@
           
           </li>
           
-          <li><strong>딥러닝:</strong> 여러 개의 은닉층이 있는 인공신경망입니다.</li>
+          <li><strong>딥러닝:</strong> 여러 개의 은닉층이 있는 인공신경망입니다.
+            <!--딥러닝 예시  -->
+          <div class="section-card space-y-10">
+            <!-- 층이 깊어지면 무엇이 달라지나 -->
+            <div>
+                <h3 class="font-black text-slate-800 mb-3 text-lg flex items-center">
+                    <i class="fa-regular fa-image mr-2 text-xl text-indigo-500"></i> 층이 깊어지면 무엇이 달라질까 &mdash; 고양이 사진 알아보기
+                </h3>
+                <p class="text-slate-700 mb-4 leading-relaxed">
+                    심층 신경망은 사진을 한 번에 보고 "고양이네!"라고 아는 것이 아닙니다.
+                    <strong>층을 지날 때마다 앞 층이 찾아 놓은 것을 재료로 삼아 조금씩 더 큰 특징을 만들어</strong> 갑니다.
+                    아래는 그 흐름을 이해하기 쉽게 정리한 것이고, 실제로 각 층이 무엇을 찾을지는
+                    <strong>사람이 정해 주는 것이 아니라 학습 중에 정해집니다.</strong>
+                </p>
+                <ol class="list-decimal list-outside space-y-3 text-slate-700 bg-indigo-50 p-5 rounded-xl border border-indigo-300 pl-5">
+                    <li>
+                        <strong>입력층:</strong> 사진을 이루는 수많은 픽셀(점)의 밝기 값을 그대로 받아들입니다.
+                    </li>
+                    <li>
+                        <strong>은닉층 1:</strong> 이웃한 점들의 값을 비교해 <strong>선, 모서리, 색의 경계</strong> 같은 단순한 특징을 잡아냅니다.
+                    </li>
+                    <li>
+                        <strong>은닉층 2:</strong> 그 선들을 조합해 <strong>눈, 코, 뾰족한 귀</strong> 같은 부분 모양을 만듭니다.
+                    </li>
+                    <li>
+                        <strong>은닉층 3:</strong> 부분들이 어떤 자리에 어떻게 놓였는지를 묶어 <strong>얼굴 전체의 짜임새</strong>를 만듭니다.
+                    </li>
+                    <li>
+                        <strong>출력층:</strong> 지금까지 모인 값으로 <strong>고양이일 가능성이 얼마나 되는지</strong>를 계산해 내놓습니다.
+                    </li>
+                </ol>
+                <p class="text-base text-slate-600 leading-relaxed mt-4">
+                    앞 시간에는 "무엇을 볼지"를 사람이 골라 넣어야 했지요. 여기서는
+                    <strong>선을 볼지 귀를 볼지까지 층이 스스로 정해 갑니다.</strong> 이것이 딥러닝의 가장 큰 특징입니다.
+                </p>
+            </div>
+          </div>
+          
+          </li>
           <li><strong>활성화 함수:</strong> 선형적인 결과를 비선형적으로 바꾸는 함수로 각 상황에 따라 다양한 활성화 함수가 사용됩니다.</li>
         </ul>
 
