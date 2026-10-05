@@ -350,7 +350,40 @@
         <h2>2. 인공신경망과 딥러닝은 무엇일까?</h2>
         <h3>(1) 퍼셉트론</h3>
         <p>뉴런의 작동 방식을 모방하여 컴퓨터 프로그램으로 구현한 것으로 <strong>가중치, 편향, 활성화 함수</strong>로 구성됩니다.</p>
-        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-300">
+                        <h4 class="font-bold text-slate-800 mb-3 text-center border-b pb-3 flex justify-center items-center gap-2">
+                            <span class="text-2xl">🧠</span> 생물학적 뉴런
+                        </h4>
+                        <ul class="space-y-3 text-slate-600 mt-4">
+                            <li class="flex items-start"><strong class="text-rose-500 min-w-[70px]">수상돌기:</strong>
+                                <span>다른 뉴런들로부터 신호를 받아들임</span></li>
+                            <li class="flex items-start"><strong class="text-amber-500 min-w-[70px]">시냅스:</strong>
+                                <span>신호의 연결 강도(중요도)를 결정함</span></li>
+                            <li class="flex items-start"><strong class="text-indigo-500 min-w-[70px]">세포체:</strong>
+                                <span>들어온 신호들을 모아 판단함</span></li>
+                            <li class="flex items-start"><strong class="text-emerald-500 min-w-[70px]">축삭돌기:</strong>
+                                <span>다음 뉴런으로 신호를 전달함</span></li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-300">
+                        <h4 class="font-bold text-slate-800 mb-3 text-center border-b pb-3 flex justify-center items-center gap-2">
+                            <span class="text-2xl">💻</span> 인공 퍼셉트론
+                        </h4>
+                        <ul class="space-y-3 text-slate-600 mt-4">
+                            <li class="flex items-start"><strong class="text-rose-500 min-w-[70px]">입력값:</strong> <span>외부 데이터나 이전 층의 값을 받아들임</span>
+                            </li>
+                            <li class="flex items-start"><strong class="text-amber-500 min-w-[70px]">가중치:</strong>
+                                <span>각 데이터의 중요도를 곱함</span></li>
+                            <li class="flex items-start"><strong class="text-indigo-500 min-w-[70px]">편향:</strong>
+                                <span>더해진 값에 숫자 하나를 보태 판단 기준을 옮김</span></li>
+                            <li class="flex items-start"><strong class="text-indigo-500 min-w-[70px]">활성화:</strong>
+                                <span>그 값을 보고 무엇을 내보낼지 정함</span></li>
+                            <li class="flex items-start"><strong class="text-emerald-500 min-w-[70px]">출력값:</strong>
+                                <span>다음 퍼셉트론으로 결과를 전달함</span></li>
+                        </ul>
+                    </div>
+                </div>
         <h3>(2) 딥러닝의 구조</h3>
         <ul>
           <li><strong>인공신경망:</strong> 여러 개의 퍼셉트론을 네트워크처럼 연결한 인공지능 모델로 입력층, 은닉층, 출력층으로 이루어집니다</li>
