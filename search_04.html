@@ -423,33 +423,33 @@
     </svg>
 </div>
             <!--2. 다층 퍼셉트론 (Multi-layer Perceptron / 1개 은닉층) 입력층과 출력층 사이에 하나의 은닉층이 존재하여 비선형 문제(XOR 등)를 해결합니다.  -->
-            <div class="overflow-x-auto">
-    <svg viewBox="0 0 520 230" class="w-full mx-auto block" style="min-width:595px; max-width:595px;" role="img" aria-label="단층 퍼셉트론 구조">
-        <!-- 레이어 제목 -->
-        <text x="120" y="26" font-size="15" text-anchor="middle" font-weight="bold" fill="#0369a1">입력층</text>
-        <text x="400" y="26" font-size="15" text-anchor="middle" font-weight="bold" fill="#be123c">출력층</text>
-        
-        <!-- 연결선 -->
-        <line x1="148" y1="80" x2="372" y2="115" stroke="#cbd5e1" stroke-width="2"/>
-        <line x1="148" y1="150" x2="372" y2="115" stroke="#cbd5e1" stroke-width="2"/>
-        
-        <!-- 입력층 노드 -->
-        <circle cx="120" cy="80" r="28" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
-        <text x="120" y="86" font-size="15" text-anchor="middle" fill="#075985">입력 1</text>
-        
-        <circle cx="120" cy="150" r="28" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
-        <text x="120" y="156" font-size="15" text-anchor="middle" fill="#075985">입력 2</text>
-        
-        <!-- 출력층 노드 -->
-        <circle cx="400" cy="115" r="28" fill="#ffe4e6" stroke="#e11d48" stroke-width="2"/>
-        <text x="400" y="121" font-size="15" text-anchor="middle" fill="#9f1239">단일 판단</text>
-        
-        <!-- 설명 텍스트 -->
-        <text x="260" y="205" font-size="14" text-anchor="middle" fill="#475569">
-            하나의 직선으로 영역을 나누어 AND, OR 등의 선형 문제를 해결한다
-        </text>
-    </svg>
-</div>
+           <div class="overflow-x-auto">
+                        <svg viewBox="0 0 520 230" class="w-full mx-auto block" style="min-width:595px; max-width:595px;" role="img"
+                             aria-label="입력 두 개가 은닉층의 퍼셉트론 두 개로 이어지고, 그 결과가 출력층 퍼셉트론 하나로 모이는 다층 퍼셉트론 구조">
+                            <text x="70" y="26" font-size="15" text-anchor="middle" font-weight="bold" fill="#0369a1">입력층</text>
+                            <text x="260" y="26" font-size="15" text-anchor="middle" font-weight="bold" fill="#4338ca">은닉층</text>
+                            <text x="450" y="26" font-size="15" text-anchor="middle" font-weight="bold" fill="#be123c">출력층</text>
+                            <line x1="98" y1="80" x2="232" y2="80" stroke="#cbd5e1" stroke-width="2"/>
+                            <line x1="98" y1="80" x2="232" y2="150" stroke="#cbd5e1" stroke-width="2"/>
+                            <line x1="98" y1="150" x2="232" y2="80" stroke="#cbd5e1" stroke-width="2"/>
+                            <line x1="98" y1="150" x2="232" y2="150" stroke="#cbd5e1" stroke-width="2"/>
+                            <line x1="288" y1="80" x2="422" y2="115" stroke="#cbd5e1" stroke-width="2"/>
+                            <line x1="288" y1="150" x2="422" y2="115" stroke="#cbd5e1" stroke-width="2"/>
+                            <circle cx="70" cy="80" r="28" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+                            <text x="70" y="86" font-size="15" text-anchor="middle" fill="#075985">입력 1</text>
+                            <circle cx="70" cy="150" r="28" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+                            <text x="70" y="156" font-size="15" text-anchor="middle" fill="#075985">입력 2</text>
+                            <circle cx="260" cy="80" r="28" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"/>
+                            <text x="260" y="86" font-size="15" text-anchor="middle" fill="#3730a3">직선 A</text>
+                            <circle cx="260" cy="150" r="28" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"/>
+                            <text x="260" y="156" font-size="15" text-anchor="middle" fill="#3730a3">직선 B</text>
+                            <circle cx="450" cy="115" r="28" fill="#ffe4e6" stroke="#e11d48" stroke-width="2"/>
+                            <text x="450" y="121" font-size="15" text-anchor="middle" fill="#9f1239">합쳐 판단</text>
+                            <text x="260" y="205" font-size="14" text-anchor="middle" fill="#475569">
+                                두 직선이 나눈 결과를 다시 한 번 판단하면 XOR도 갈라진다
+                            </text>
+                        </svg>
+                    </div>
 <!--3. 딥러닝 (Deep Neural Network / 다중 은닉층)
 은닉층을 2개 이상 깊게(Deep) 쌓아 복잡한 특징을 단계적으로 추출하는 구조입니다. (전체 너비 viewBox="0 0 600 230" 사용)  -->
         <div class="overflow-x-auto">
