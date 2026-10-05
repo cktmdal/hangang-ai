@@ -687,16 +687,72 @@
                             </div>     
               
         </div>
-
+          
+      <br/><br/>
         <h3>(3) 딥러닝의 학습</h3>
         <p>딥러닝 모델에 데이터를 넣어 출력한 결과(예측값)를 실제값과 비교하여 오차를 줄이는 방향으로 가중치와 편향을 조절하는 과정입니다</p>
+          
         <ul>
           <li><strong>순전파:</strong> 딥러닝에서 학습하기 위해 데이터를 입력하고 은닉층과 출력층을 거쳐 결과를 출력하는 과정</li>
           <li><strong>오차 계산:</strong> 딥러닝 모델이 출력한 예측값과 실제값 사이의 차이를 계산하는 과정 (계산하는 함수는 손실함수</li>
           <li><strong>역전파:</strong> 오차를 줄이도록 순전파의 반대 방향으로 이동하며 각 퍼셉트론의 가중치와 편향을 수정하는 과정</li>
           <li><strong>손실함수:</strong> 오차 계산에 사용하는 함수로 목적에 따라 다양한 함수가 사용됨</li>
         </ul>
+       <div class="overflow-x-auto mb-6">
+                    <svg viewBox="0 0 540 220" class="w-full mx-auto block" style="min-width:580px; max-width:580px;" role="img"
+                         aria-label="입력에서 출력으로 값이 흐르는 순전파와, 출력에서 입력 쪽으로 오차의 책임이 거슬러 오는 역전파">
+                        <rect x="20" y="70" width="90" height="60" rx="10" fill="#e0f2fe" stroke="#0284c7"
+                              stroke-width="2"/>
+                        <text x="65" y="106" font-size="15" text-anchor="middle" fill="#075985">입력층</text>
+                        <rect x="160" y="70" width="110" height="60" rx="10" fill="#e0e7ff" stroke="#4f46e5"
+                              stroke-width="2"/>
+                        <text x="215" y="106" font-size="15" text-anchor="middle" fill="#3730a3">은닉층</text>
+                        <rect x="320" y="70" width="110" height="60" rx="10" fill="#e0e7ff" stroke="#4f46e5"
+                              stroke-width="2"/>
+                        <text x="375" y="106" font-size="15" text-anchor="middle" fill="#3730a3">은닉층</text>
+                        <rect x="450" y="70" width="70" height="60" rx="10" fill="#ffe4e6" stroke="#e11d48"
+                              stroke-width="2"/>
+                        <text x="485" y="106" font-size="15" text-anchor="middle" fill="#9f1239">출력층</text>
 
+                        <path d="M20 44 H514" stroke="#0d9488" stroke-width="3" fill="none"
+                              marker-end="url(#ar-fwd)"/>
+                        <text x="267" y="32" font-size="15" text-anchor="middle" fill="#0f766e" font-weight="bold">
+                            순전파 &mdash; 값이 앞으로 흘러 예측이 나온다
+                        </text>
+
+                        <path d="M514 168 H26" stroke="#be123c" stroke-width="3" fill="none" stroke-dasharray="7 5"
+                              marker-end="url(#ar-back)"/>
+                        <text x="270" y="196" font-size="15" text-anchor="middle" fill="#9f1239" font-weight="bold">
+                            역전파 &mdash; 오차의 책임이 거꾸로 거슬러 온다
+                        </text>
+                        <defs>
+                            <marker id="ar-fwd" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+                                <polygon points="0 0, 9 3.5, 0 7" fill="#0d9488"/>
+                            </marker>
+                            <marker id="ar-back" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+                                <polygon points="0 0, 9 3.5, 0 7" fill="#be123c"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-teal-50 border border-teal-300 rounded-2xl p-5 space-y-2">
+                        <h4 class="font-black text-teal-800 text-lg">순전파(forward propagation)</h4>
+                        <p class="text-base text-teal-900 leading-relaxed">
+                            데이터를 입력층에 넣으면 값이 <strong>층을 차례로 지나 출력층까지 앞으로 흘러갑니다.</strong>
+                            각 층에서 가중치를 곱하고 편향을 더하고 활성화 함수를 지나는, 지금까지 배운 그 계산입니다.
+                            끝에서 예측이 나오고, 정답과 비교해 손실을 측정합니다.
+                        </p>
+                    </div>
+                    <div class="bg-rose-50 border border-rose-300 rounded-2xl p-5 space-y-2">
+                        <h4 class="font-black text-rose-800 text-lg">역전파(backpropagation)</h4>
+                        <p class="text-base text-rose-900 leading-relaxed">
+                            이번에는 <strong>출력층에서 입력층 쪽으로 거슬러 가며</strong>,
+                            "이 오차에 너는 얼마나 책임이 있는가"를 가중치마다 몫으로 나누어 매깁니다.
+                            그 몫이 큰 가중치는 많이, 작은 가중치는 조금 고칩니다. 얼마나 고칠지는 경사하강법이 정합니다.
+                        </p>
+                    </div>
+                </div>
         <div class="table-container">
           <p><strong>&lt;모델별로 주로 사용하는 손실함수&gt;</strong></p>
           <table>
@@ -747,7 +803,62 @@
           <li><strong>학습:</strong> 훈련 데이터와 테스트 데이터를 입력하고 한 번에 학습할 데이터의 개수(에포크) 지정 후 학습 실행</li>
           <li><strong>성능 평가:</strong> 훈련 데이터와 테스트 데이터로 성능 평가</li>
         </ol>
+        
       </section>
+      <!-- 딥러닝의 활용 분야 -->
+    <section class="scroll-mt-24 space-y-12" id="field">
+        <div class="text-center space-y-4">
+            <h2 class="text-3xl font-black text-slate-900">딥러닝은 어디에 쓰이고 있을까?</h2>
+            <div class="w-20 h-1.5 bg-indigo-500 mx-auto rounded-full"></div>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto font-semibold">사람이 특징을 짚어 주기 어려운 자리마다 딥러닝이 들어간다</p>
+        </div>
+
+        <div class="section-card space-y-8">
+            <p class="text-lg text-slate-700 leading-relaxed">
+                아래 분야에는 공통점이 하나 있습니다. 모두 <strong>사진, 소리, 글, 영상처럼 표로 정리하기 어려운 데이터</strong>를
+                다룬다는 점입니다. "무엇을 봐야 하는지"를 사람이 말로 적어 주기 어려운 자리에서 딥러닝이 힘을 냅니다.
+            </p>
+            <div class="overflow-x-auto">
+                <table class="table-prose w-full text-base border-collapse">
+                    <thead>
+                    <tr class="bg-indigo-100 text-indigo-900">
+                        <th class="border border-indigo-200 px-3 py-2 text-left w-36">분야</th>
+                        <th class="border border-indigo-200 px-3 py-2 text-left">무엇을 학습하나</th>
+                        <th class="border border-indigo-200 px-3 py-2 text-left">특히 조심할 점</th>
+                    </tr>
+                    </thead>
+                    <tbody class="text-slate-700 align-top">
+                    <tr>
+                        <td class="border border-slate-200 px-3 py-2 font-bold">자율주행</td>
+                        <td class="border border-slate-200 px-3 py-2">카메라와 센서로 들어온 장면에서 차선, 신호등, 사람, 다른 차를 가려낸다</td>
+                        <td class="border border-slate-200 px-3 py-2">학습 때 본 적 없는 상황(폭설, 공사 구간)에서 판단이 흔들릴 수 있다</td>
+                    </tr>
+                    <tr class="bg-slate-50">
+                        <td class="border border-slate-200 px-3 py-2 font-bold">의료 영상 판독</td>
+                        <td class="border border-slate-200 px-3 py-2">엑스선·CT 영상에서 병으로 의심되는 부분의 모양과 밝기 패턴을 찾는다</td>
+                        <td class="border border-slate-200 px-3 py-2">최종 판단은 사람이 한다. 왜 그렇게 봤는지 설명하기 어렵다는 점이 특히 문제가 된다</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-slate-200 px-3 py-2 font-bold">음성 인식·번역</td>
+                        <td class="border border-slate-200 px-3 py-2">소리의 파형과 글의 앞뒤 순서를 함께 학습해 말을 글로, 글을 다른 언어로 옮긴다</td>
+                        <td class="border border-slate-200 px-3 py-2">사투리나 배경 소음처럼 학습 데이터에 적게 들어 있던 경우에 성능이 떨어진다</td>
+                    </tr>
+                    <tr class="bg-slate-50">
+                        <td class="border border-slate-200 px-3 py-2 font-bold">게임·전략 판단</td>
+                        <td class="border border-slate-200 px-3 py-2">바둑판이나 게임 화면의 상태를 보고 다음 수의 값어치를 매긴다</td>
+                        <td class="border border-slate-200 px-3 py-2">규칙이 분명한 판 위에서 강하다. 규칙이 흐릿한 현실 문제에 그대로 옮기기는 어렵다</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-slate-200 px-3 py-2 font-bold">창작 도구</td>
+                        <td class="border border-slate-200 px-3 py-2">수많은 그림·음악·글에서 형태와 결을 학습해 새로운 것을 만들어 낸다</td>
+                        <td class="border border-slate-200 px-3 py-2">학습에 쓴 원작자의 권리, 만들어진 결과물의 책임을 누가 지는가 하는 문제가 따른다</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+    </section>
+
+    
     </div>
 
     <!-- Tab 2: 컴퓨터 비전 -->
