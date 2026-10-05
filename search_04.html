@@ -347,10 +347,13 @@
                         </ul>
                     </div>
                 </div>
+        
         <br/><br/>
         <h2>2. 인공신경망과 딥러닝은 무엇일까?</h2>
         <h3>(1) 퍼셉트론</h3>
-        <p>뉴런의 작동 방식을 모방하여 컴퓨터 프로그램으로 구현한 것으로 <strong>가중치, 편향, 활성화 함수</strong>로 구성됩니다.</p>
+        <p>뉴런의 작동 방식을 모방하여 컴퓨터 프로그램으로 구현한 것으로 <strong>가중치, 편향, 활성화 함수</strong>로 구성됩니다.</p>  
+        <br/><br/>
+        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-300">
                         <h4 class="font-bold text-slate-800 mb-3 text-center border-b pb-3 flex justify-center items-center gap-2">
@@ -385,9 +388,129 @@
                         </ul>
                     </div>
                 </div>
+          <br/><br/>
+        
+        
         <h3>(2) 딥러닝의 구조</h3>
         <ul>
-          <li><strong>인공신경망:</strong> 여러 개의 퍼셉트론을 네트워크처럼 연결한 인공지능 모델로 입력층, 은닉층, 출력층으로 이루어집니다</li>
+          <li><strong>인공신경망:</strong> 여러 개의 퍼셉트론을 네트워크처럼 연결한 인공지능 모델로 입력층, 은닉층, 출력층으로 이루어집니다
+          <!--단층 퍼셉트론 (Single-layer Perceptron) 은닉층 없이 입력층에서 출력층으로 바로 연결되는 가장 기본 형태입니다.  -->
+               <div class="overflow-x-auto">
+    <svg viewBox="0 0 520 230" class="w-full mx-auto block" style="min-width:595px; max-width:595px;" role="img" aria-label="단층 퍼셉트론 구조">
+        <!-- 레이어 제목 -->
+        <text x="120" y="26" font-size="15" text-anchor="middle" font-weight="bold" fill="#0369a1">입력층</text>
+        <text x="400" y="26" font-size="15" text-anchor="middle" font-weight="bold" fill="#be123c">출력층</text>
+        
+        <!-- 연결선 -->
+        <line x1="148" y1="80" x2="372" y2="115" stroke="#cbd5e1" stroke-width="2"/>
+        <line x1="148" y1="150" x2="372" y2="115" stroke="#cbd5e1" stroke-width="2"/>
+        
+        <!-- 입력층 노드 -->
+        <circle cx="120" cy="80" r="28" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+        <text x="120" y="86" font-size="15" text-anchor="middle" fill="#075985">입력 1</text>
+        
+        <circle cx="120" cy="150" r="28" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+        <text x="120" y="156" font-size="15" text-anchor="middle" fill="#075985">입력 2</text>
+        
+        <!-- 출력층 노드 -->
+        <circle cx="400" cy="115" r="28" fill="#ffe4e6" stroke="#e11d48" stroke-width="2"/>
+        <text x="400" y="121" font-size="15" text-anchor="middle" fill="#9f1239">단일 판단</text>
+        
+        <!-- 설명 텍스트 -->
+        <text x="260" y="205" font-size="14" text-anchor="middle" fill="#475569">
+            하나의 직선으로 영역을 나누어 AND, OR 등의 선형 문제를 해결한다
+        </text>
+    </svg>
+</div>
+            <!--2. 다층 퍼셉트론 (Multi-layer Perceptron / 1개 은닉층) 입력층과 출력층 사이에 하나의 은닉층이 존재하여 비선형 문제(XOR 등)를 해결합니다.  -->
+            <div class="overflow-x-auto">
+    <svg viewBox="0 0 520 230" class="w-full mx-auto block" style="min-width:595px; max-width:595px;" role="img" aria-label="단층 퍼셉트론 구조">
+        <!-- 레이어 제목 -->
+        <text x="120" y="26" font-size="15" text-anchor="middle" font-weight="bold" fill="#0369a1">입력층</text>
+        <text x="400" y="26" font-size="15" text-anchor="middle" font-weight="bold" fill="#be123c">출력층</text>
+        
+        <!-- 연결선 -->
+        <line x1="148" y1="80" x2="372" y2="115" stroke="#cbd5e1" stroke-width="2"/>
+        <line x1="148" y1="150" x2="372" y2="115" stroke="#cbd5e1" stroke-width="2"/>
+        
+        <!-- 입력층 노드 -->
+        <circle cx="120" cy="80" r="28" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+        <text x="120" y="86" font-size="15" text-anchor="middle" fill="#075985">입력 1</text>
+        
+        <circle cx="120" cy="150" r="28" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+        <text x="120" y="156" font-size="15" text-anchor="middle" fill="#075985">입력 2</text>
+        
+        <!-- 출력층 노드 -->
+        <circle cx="400" cy="115" r="28" fill="#ffe4e6" stroke="#e11d48" stroke-width="2"/>
+        <text x="400" y="121" font-size="15" text-anchor="middle" fill="#9f1239">단일 판단</text>
+        
+        <!-- 설명 텍스트 -->
+        <text x="260" y="205" font-size="14" text-anchor="middle" fill="#475569">
+            하나의 직선으로 영역을 나누어 AND, OR 등의 선형 문제를 해결한다
+        </text>
+    </svg>
+</div>
+<!--3. 딥러닝 (Deep Neural Network / 다중 은닉층)
+은닉층을 2개 이상 깊게(Deep) 쌓아 복잡한 특징을 단계적으로 추출하는 구조입니다. (전체 너비 viewBox="0 0 600 230" 사용)  -->
+        <div class="overflow-x-auto">
+    <svg viewBox="0 0 600 230" class="w-full mx-auto block" style="min-width:595px; max-width:595px;" role="img" aria-label="딥러닝 신경망 구조">
+        <!-- 레이어 제목 -->
+        <text x="60" y="26" font-size="15" text-anchor="middle" font-weight="bold" fill="#0369a1">입력층</text>
+        <text x="200" y="26" font-size="15" text-anchor="middle" font-weight="bold" fill="#4338ca">은닉층 1</text>
+        <text x="340" y="26" font-size="15" text-anchor="middle" font-weight="bold" fill="#0d9488">은닉층 2</text>
+        <text x="520" y="26" font-size="15" text-anchor="middle" font-weight="bold" fill="#be123c">출력층</text>
+        
+        <!-- 입력층 -> 은닉층 1 연결선 -->
+        <line x1="85" y1="80" x2="175" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+        <line x1="85" y1="80" x2="175" y2="150" stroke="#cbd5e1" stroke-width="1.5"/>
+        <line x1="85" y1="150" x2="175" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+        <line x1="85" y1="150" x2="175" y2="150" stroke="#cbd5e1" stroke-width="1.5"/>
+        
+        <!-- 은닉층 1 -> 은닉층 2 연결선 -->
+        <line x1="225" y1="80" x2="315" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+        <line x1="225" y1="80" x2="315" y2="150" stroke="#cbd5e1" stroke-width="1.5"/>
+        <line x1="225" y1="150" x2="315" y2="80" stroke="#cbd5e1" stroke-width="1.5"/>
+        <line x1="225" y1="150" x2="315" y2="150" stroke="#cbd5e1" stroke-width="1.5"/>
+        
+        <!-- 은닉층 2 -> 출력층 연결선 -->
+        <line x1="365" y1="80" x2="495" y2="115" stroke="#cbd5e1" stroke-width="1.5"/>
+        <line x1="365" y1="150" x2="495" y2="115" stroke="#cbd5e1" stroke-width="1.5"/>
+        
+        <!-- 입력층 노드 -->
+        <circle cx="60" cy="80" r="25" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+        <text x="60" y="85" font-size="14" text-anchor="middle" fill="#075985">입력 1</text>
+        
+        <circle cx="60" cy="150" r="25" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+        <text x="60" y="155" font-size="14" text-anchor="middle" fill="#075985">입력 2</text>
+        
+        <!-- 은닉층 1 노드 -->
+        <circle cx="200" cy="80" r="25" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"/>
+        <text x="200" y="85" font-size="13" text-anchor="middle" fill="#3730a3">특징 1</text>
+        
+        <circle cx="200" cy="150" r="25" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"/>
+        <text x="200" y="155" font-size="13" text-anchor="middle" fill="#3730a3">특징 2</text>
+        
+        <!-- 은닉층 2 노드 -->
+        <circle cx="340" cy="80" r="25" fill="#ccfbf1" stroke="#0d9488" stroke-width="2"/>
+        <text x="340" y="85" font-size="13" text-anchor="middle" fill="#115e59">추상화 A</text>
+        
+        <circle cx="340" cy="150" r="25" fill="#ccfbf1" stroke="#0d9488" stroke-width="2"/>
+        <text x="340" y="155" font-size="13" text-anchor="middle" fill="#115e59">추상화 B</text>
+        
+        <!-- 출력층 노드 -->
+        <circle cx="520" cy="115" r="25" fill="#ffe4e6" stroke="#e11d48" stroke-width="2"/>
+        <text x="520" y="120" font-size="14" text-anchor="middle" fill="#9f1239">최종 판단</text>
+        
+        <!-- 설명 텍스트 -->
+        <text x="300" y="205" font-size="14" text-anchor="middle" fill="#475569">
+            여러 은닉층을 깊게 연결하여 고차원의 복잡한 패턴을 학습한다
+        </text>
+    </svg>
+</div>
+          
+          
+          </li>
+          
           <li><strong>딥러닝:</strong> 여러 개의 은닉층이 있는 인공신경망입니다.</li>
           <li><strong>활성화 함수:</strong> 선형적인 결과를 비선형적으로 바꾸는 함수로 각 상황에 따라 다양한 활성화 함수가 사용됩니다.</li>
         </ul>
