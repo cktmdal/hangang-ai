@@ -550,7 +550,24 @@
           </div>
           
           </li>
-          <li><strong>활성화 함수:</strong> 선형적인 결과를 비선형적으로 바꾸는 함수로 각 상황에 따라 다양한 활성화 함수가 사용됩니다.</li>
+          <li><strong>활성화 함수:</strong> 선형적인 결과를 비선형적으로 바꾸는 함수로 각 상황에 따라 다양한 활성화 함수가 사용됩니다
+            <div class="bg-rose-50 border-2 border-rose-300 rounded-2xl p-6 space-y-3 mb-8">
+                    <p class="font-black text-lg text-rose-900">활성화 함수를 빼면, 층을 아무리 쌓아도 소용이 없다</p>
+                    <p class="text-base text-rose-900 leading-relaxed">
+                        가중합과 편향은 <strong>곱하고 더하는 계산뿐</strong>입니다.
+                        그런 층을 두 번 지나면 어떻게 될까요? 곱하고 더한 것을 다시 곱하고 더한 것이니,
+                        <strong>정리하면 결국 또 하나의 곱하고 더하기</strong>가 됩니다.
+                        층을 열 개, 백 개 쌓아도 마찬가지입니다.
+                        <strong>결과는 직선 하나를 긋는 퍼셉트론 한 개와 똑같아집니다.</strong>
+                        그러면 XOR 문제도 여전히 풀 수 없습니다.
+                    </p>
+                    <p class="text-base text-rose-900 leading-relaxed">
+                        그래서 층과 층 사이마다 <strong>곱셈·덧셈이 아닌 다른 방식으로 값을 한 번 꺾어 주는 단계</strong>를 넣습니다.
+                        이 단계가 <strong>활성화 함수(activation function)</strong>입니다.
+                        활성화 함수 덕분에 <strong>층을 쌓는 일이 비로소 의미를 가집니다.</strong>
+                    </p>
+                </div>
+            </li>
         </ul>
 
         <div class="table-container">
@@ -579,6 +596,46 @@
               </tr>
             </tbody>
           </table>
+           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-400 text-center">
+                        <div class="bg-white rounded-xl border border-slate-200 mb-4 p-2">
+                            <svg viewBox="0 0 160 110" class="w-full mx-auto block" style="min-width:200px; max-width:200px" role="img" aria-label="계단 함수 그래프">
+                                <line x1="10" y1="90" x2="150" y2="90" stroke="#cbd5e1" stroke-width="2"/>
+                                <line x1="80" y1="10" x2="80" y2="102" stroke="#cbd5e1" stroke-width="2"/>
+                                <path d="M10 90 H80 V25 H150" fill="none" stroke="#e11d48" stroke-width="3"/>
+                                <text x="90" y="20" font-size="14" fill="#64748b">1</text>
+                                <text x="60" y="104" font-size="14" fill="#64748b">0</text>
+                            </svg>
+                        </div>
+                        <h4 class="font-bold text-slate-800 mb-2">계단 함수</h4>
+                        <p class="text-slate-600 text-base">기준을 넘으면 1, 아니면 0. 단호하지만 <strong>얼마나 넘었는지</strong>는 알려 주지 않습니다.</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-400 text-center">
+                        <div class="bg-white rounded-xl border border-slate-200 mb-4 p-2">
+                            <svg viewBox="0 0 160 110" class="w-full mx-auto block" style="min-width:200px; max-width:200px" role="img" aria-label="시그모이드 함수 그래프">
+                                <line x1="10" y1="90" x2="150" y2="90" stroke="#cbd5e1" stroke-width="2"/>
+                                <line x1="80" y1="10" x2="80" y2="102" stroke="#cbd5e1" stroke-width="2"/>
+                                <path d="M10 88 C55 88, 55 25, 150 25" fill="none" stroke="#0891b2" stroke-width="3"/>
+                                <text x="90" y="20" font-size="14" fill="#64748b">1</text>
+                                <text x="60" y="104" font-size="14" fill="#64748b">0</text>
+                            </svg>
+                        </div>
+                        <h4 class="font-bold text-slate-800 mb-2">시그모이드 함수</h4>
+                        <p class="text-slate-600 text-base">0과 1 사이를 <strong>부드럽게</strong> 오갑니다. 얼마나 그럴듯한지를 함께 담아 넘길 수 있습니다.</p>
+                    </div>
+                    <div class="bg-indigo-50 p-5 rounded-2xl border border-indigo-300 text-center">
+                        <div class="bg-white rounded-xl border border-indigo-200 mb-4 p-2">
+                            <svg viewBox="0 0 160 110" class="w-full mx-auto block" style="min-width:200px; max-width:200px" role="img" aria-label="렐루 함수 그래프">
+                                <line x1="10" y1="90" x2="150" y2="90" stroke="#cbd5e1" stroke-width="2"/>
+                                <line x1="80" y1="10" x2="80" y2="102" stroke="#cbd5e1" stroke-width="2"/>
+                                <path d="M10 90 H80 L145 22" fill="none" stroke="#4f46e5" stroke-width="3"/>
+                                <text x="60" y="104" font-size="14" fill="#64748b">0</text>
+                            </svg>
+                        </div>
+                        <h4 class="font-bold text-indigo-800 mb-2">ReLU(렐루) 함수</h4>
+                        <p class="text-slate-600 text-base">음수는 0으로 잘라 내고, 양수는 있는 그대로 넘깁니다. <strong>0에서 한 번 꺾인다</strong>는 점이 핵심입니다.</p>
+                    </div>
+                </div>
         </div>
 
         <h3>(3) 딥러닝의 학습</h3>
