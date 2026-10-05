@@ -247,6 +247,7 @@
       font-weight: bold;
     }
   </style>
+   <link rel="stylesheet" href="ai-basics-ZHMNdnwA.css">
 </head>
 <body>
 
@@ -275,10 +276,49 @@
         <p class="tab-content">알고가기 - "인공지능이 뇌를 그대로 흉내 낸 건가요?"<br/>
         아닙니다. 인공신경망은 <b>뇌의 신경 세포가 신호를 주고받는 모습에서 착상을 얻은 수학적 계산 구조</b>일 뿐이고, 실제 뇌가 어떻게 작동하는지를 재현한 것이 아닙니다
         </p>
-        <h3>(1) 퍼셉트론[cite: 73]</h3>
+        <h3>기계학습과 딥러닝 무엇이 다른가?</h3>
+           <div class="overflow-x-auto">
+                        <svg viewBox="0 0 560 250" class="w-full mx-auto block" style="min-width:640px; max-width:640px;" role="img"
+                             aria-label="기계학습은 사람이 특징을 고른 뒤 모델이 학습하고, 딥러닝은 특징을 고르는 일까지 신경망이 한꺼번에 한다">
+                            <text x="8" y="24" font-size="15" font-weight="bold" fill="#0f766e">기계학습</text>
+                            <rect x="8" y="36" width="96" height="56" rx="10" fill="#f1f5f9" stroke="#94a3b8"/>
+                            <text x="56" y="70" font-size="15" text-anchor="middle" fill="#334155">데이터</text>
+                            <path d="M110 64 H150" stroke="#94a3b8" stroke-width="2" marker-end="url(#ar-gray)"/>
+                            <rect x="156" y="36" width="150" height="56" rx="10" fill="#ccfbf1" stroke="#0d9488"/>
+                            <text x="231" y="60" font-size="15" text-anchor="middle" fill="#0f766e" font-weight="bold">사람이 볼 것을 고름</text>
+                            <text x="231" y="80" font-size="14" text-anchor="middle" fill="#0f766e">귀 모양·수염 길이…</text>
+                            <path d="M312 64 H352" stroke="#94a3b8" stroke-width="2" marker-end="url(#ar-gray)"/>
+                            <rect x="358" y="36" width="110" height="56" rx="10" fill="#e0e7ff" stroke="#6366f1"/>
+                            <text x="413" y="70" font-size="15" text-anchor="middle" fill="#3730a3">모델이 판단</text>
+                            <path d="M474 64 H508" stroke="#94a3b8" stroke-width="2" marker-end="url(#ar-gray)"/>
+                            <text x="530" y="70" font-size="15" text-anchor="middle" fill="#334155">결과</text>
+
+                            <line x1="8" y1="118" x2="552" y2="118" stroke="#e2e8f0" stroke-width="2"/>
+
+                            <text x="8" y="152" font-size="15" font-weight="bold" fill="#3730a3">딥러닝</text>
+                            <rect x="8" y="164" width="96" height="56" rx="10" fill="#f1f5f9" stroke="#94a3b8"/>
+                            <text x="56" y="198" font-size="15" text-anchor="middle" fill="#334155">데이터</text>
+                            <path d="M110 192 H150" stroke="#94a3b8" stroke-width="2" marker-end="url(#ar-gray)"/>
+                            <rect x="156" y="164" width="312" height="56" rx="10" fill="#e0e7ff" stroke="#6366f1"
+                                  stroke-width="2"/>
+                            <text x="312" y="188" font-size="15" text-anchor="middle" fill="#3730a3" font-weight="bold">
+                                볼 것을 찾는 일 + 판단을 층을 지나며 함께
+                            </text>
+                            <text x="312" y="208" font-size="14" text-anchor="middle" fill="#4338ca">여러 층으로 쌓은 신경망</text>
+                            <path d="M474 192 H508" stroke="#94a3b8" stroke-width="2" marker-end="url(#ar-gray)"/>
+                            <text x="530" y="198" font-size="15" text-anchor="middle" fill="#334155">결과</text>
+                            <defs>
+                                <marker id="ar-gray" markerWidth="9" markerHeight="7" refX="8" refY="3.5"
+                                        orient="auto">
+                                    <polygon points="0 0, 9 3.5, 0 7" fill="#94a3b8"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+        <h3>(1) 퍼셉트론</h3>
         <p>뉴런의 작동 방식을 모방하여 컴퓨터 프로그램으로 구현한 것으로 <strong>가중치, 편향, 활성화 함수</strong>로 구성됩니다[cite: 73].</p>
         
-        <h3>(2) 딥러닝의 구조[cite: 73]</h3>
+        <h3>(2) 딥러닝의 구조</h3>
         <ul>
           <li><strong>인공신경망:</strong> 여러 개의 퍼셉트론을 네트워크처럼 연결한 인공지능 모델로 입력층, 은닉층, 출력층으로 이루어집니다[cite: 73].</li>
           <li><strong>딥러닝:</strong> 여러 개의 은닉층이 있는 인공신경망입니다[cite: 73].</li>
@@ -286,7 +326,7 @@
         </ul>
 
         <div class="table-container">
-          <p><strong>&lt;모델별로 주로 사용하는 활성화 함수&gt;</strong>[cite: 73]</p>
+          <p><strong>&lt;모델별로 주로 사용하는 활성화 함수&gt;</strong></p>
           <table>
             <thead>
               <tr>
