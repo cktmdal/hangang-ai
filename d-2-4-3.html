@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인공지능의 언어 이해 방식</title>
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-light: #e0e7ff;
+            --accent-1: #3b82f6;
+            --accent-2: #10b981;
+            --accent-3: #f59e0b;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--text-sub);
+            font-size: 1.05rem;
+        }
+
+        /* 섹션 카드 공통 */
+        .section-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+        }
+
+        .section-card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 1. 빈도수 기반 방식 */
+        .freq-card { border-left: 5px solid var(--accent-1); }
+        .freq-card h2 { color: var(--accent-1); }
+        
+        .freq-desc {
+            margin-bottom: 15px;
+        }
+
+        .freq-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .freq-box {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .freq-box h4 {
+            color: #1d4ed8;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .freq-box ul {
+            list-style: none;
+            padding-left: 0;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .freq-box li {
+            margin-bottom: 6px;
+            background: #ffffff;
+            padding: 6px 10px;
+            border-radius: 4px;
+            border: 1px solid #dbeafe;
+        }
+
+        .keyword {
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        /* 2. 의미론적 접근 방식 */
+        .semantic-card { border-left: 5px solid var(--accent-2); }
+        .semantic-card h2 { color: var(--accent-2); }
+
+        .semantic-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .step-box {
+            background-color: #f1f5f9;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .step-box:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-2);
+            background-color: #ecfdf5;
+        }
+
+        .step-num {
+            display: inline-block;
+            background-color: var(--accent-2);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            line-height: 24px;
+            text-align: center;
+        }
+
+        .step-title {
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            color: #065f46;
+        }
+
+        .step-desc {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+        }
+
+        /* 3. 딥러닝을 이용한 방식 */
+        .dl-card { border-left: 5px solid var(--accent-3); }
+        .dl-card h2 { color: var(--accent-3); }
+
+        .dl-highlight {
+            background-color: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .comp-box {
+            background-color: #f8fafc;
+            border: 1px solid #f2d294;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .comp-box h3 {
+            color: #d97706;
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .comp-box p {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .example-quote {
+            background: #fff;
+            border-left: 3px solid #f59e0b;
+            padding: 8px 12px;
+            font-size: 0.88rem;
+            color: #475569;
+            margin-top: 8px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        @media (max-width: 600px) {
+            .semantic-steps, .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>인공지능에서 언어 이해란 무엇일까?</h1>
+            <p>기계가 인간의 문장 속 의미를 파악하는 3가지 접근 방식</p>
+        </header>
+
+        <!-- 1. 빈도수 기반 방식 -->
+        <div class="section-card freq-card">
+            <h2>📊 1. 빈도수 기반 방식</h2>
+            <p class="freq-desc">단어나 문장이 텍스트 데이터 내에서 <strong>얼마나 자주 등장하는지</strong>를 세어 중요도를 파악하고 문서의 성격을 분류하는 방식입니다.</p>
+            
+            <div class="freq-examples">
+                <div class="freq-box">
+                    <h4>🎬 연예 분야</h4>
+                    <ul>
+                        <li>문장: 배우는 <span class="keyword">A 영화</span>의 주인공이다.</li>
+                        <li>핵심 키워드 빈도 분석을 통해 연예/영화 카테고리로 분류</li>
+                    </ul>
+                </div>
+                <div class="freq-box">
+                    <h4>🎤 공연/연예 분야</h4>
+                    <ul>
+                        <li>문장: 이 가수는 이번 <span class="keyword">공연</span>에서 많은 활약을 했다.</li>
+                        <li>핵심 키워드 빈도 분석을 통해 연예/스타 카테고리로 분류</li>
+                    </ul>
+                </div>
+                <div class="freq-box">
+                    <h4>⚽ 스포츠 분야</h4>
+                    <ul>
+                        <li>문장: 선수는이번 <span class="keyword">경기</span>에서 팀을 승이로 이끌었습니다.</li>
+                        <li>핵심 키워드 빈도 분석을 통해 스포츠 카테고리로 분류</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 의미론적 접근 방식 -->
+        <div class="section-card semantic-card">
+            <h2>🧩 2. 의미론적 접근 방식</h2>
+            <p style="margin-bottom: 10px;">형태소 분석부터 담화·의도 분석까지 <strong>단계별 과정</strong>을 통해 문장의 깊은 의미를 파악하는 방식입니다.</p>
+            
+            <div class="semantic-steps">
+                <div class="step-box">
+                    <span class="step-num">1</span>
+                    <div class="step-title">형태소 분석</div>
+                    <div class="step-desc">문장을 가장 작은 단위(형태소)로 분리</div>
+                </div>
+                <div class="step-box">
+                    <span class="step-num">2</span>
+                    <div class="step-title">구문 분석</div>
+                    <div class="step-desc">단어들 사이의 문법적 관계 파악</div>
+                </div>
+                <div class="step-box">
+                    <span class="step-num">3</span>
+                    <div class="step-title">의미 분석</div>
+                    <div class="step-desc">각 단어와 구문의 실제 의미 분석</div>
+                </div>
+                <div class="step-box">
+                    <span class="step-num">4</span>
+                    <div class="step-title">개체명 분석</div>
+                    <div class="step-desc">인물, 장소, 시간 등 개체명 파악</div>
+                </div>
+                <div class="step-box">
+                    <span class="step-num">5</span>
+                    <div class="step-title">담화·의도 분석</div>
+                    <div class="step-desc">전체 대화 맥락과 숨은 의도 파악</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. 딥러닝을 이용한 방식 -->
+        <div class="section-card dl-card">
+            <h2>🧠 3. 딥러닝을 이용한 방식</h2>
+            <div class="dl-highlight">
+                💡 텍스트 데이터는 문장에 나열된 <strong>단어의 순서와 조건·부정 표현의 조합</strong>에 따라 전체 의미가 크게 달라집니다.
+            </div>
+            
+            <div class="comparison-grid">
+                <div class="comp-box">
+                    <h3>⚡ 일반적인 딥러닝 방식 (단순 단어 집합 중심)</h3>
+                    <p>단어의 순서를 무시하거나 독립적으로 처리하여, '잠을 자다'와 '안 자다' 같은 조건부 부정 표현의 인과 관계를 정확히 분리하기 어렵습니다.</p>
+                    <div class="example-quote">
+                        <strong>대상 문장:</strong> "수업 중 잠을 <u>안 자야</u> 시험을 <u>잘 볼 거야</u>" <br>→ 단어 나열 중심이라 '잠'과 '시험'의 상관관계를 단순 키워드로만 인식해 오해할 소지가 있음
+                    </div>
+                </div>
+
+                <div class="comp-box">
+                    <h3>🔄 순환 신경망 (RNN) 방식 (순서 및 맥락 기억)</h3>
+                    <p>단어가 들어오는 순서대로 이전 상태를 기억하며 전달하므로, '잠을 안 자야'라는 선행 조건이 뒤의 '시험을 잘 볼 거야'라는 결과와 어떻게 연결되는지 정확히 이해합니다.</p>
+                    <div class="example-quote">
+                        <strong>대상 문장:</strong> "수업 중 잠을 <u>안 자야</u> 시험을 <u>잘 볼 거야</u>" <br>→ 인과 관계와 흐름을 순서대로 학습하여 '수업 태도와 성적의 연관성'을 정확히 파악
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

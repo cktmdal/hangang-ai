@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인공지능의 텍스트 데이터 인식 방식</title>
+    <style>
+        :root {
+            --primary-color: #0284c7;
+            --primary-light: #e0f2fe;
+            --secondary-color: #0d9488;
+            --secondary-light: #ccfbf1;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--text-sub);
+            font-size: 1.05rem;
+        }
+
+        .main-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .main-card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .highlight-box {
+            display: inline-block;
+            background-color: #f1f5f9;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #0f172a;
+            border: 1px dashed #cbd5e1;
+        }
+
+        /* 비교 그리드 */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+        }
+
+        .method-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .method-card.one-hot {
+            border-top: 5px solid var(--primary-color);
+        }
+
+        .method-card.embedding {
+            border-top: 5px solid var(--secondary-color);
+        }
+
+        .method-header h3 {
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+        }
+
+        .method-card.one-hot h3 { color: var(--primary-color); }
+        .method-card.embedding h3 { color: var(--secondary-color); }
+
+        .method-header p {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            margin-bottom: 20px;
+            min-height: 48px;
+        }
+
+        /* 시각화 도표 스타일 */
+        .visual-demo {
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .visual-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--text-sub);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* 원-핫 인코딩 시각화 */
+        .vector-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .vector-label {
+            font-weight: 500;
+            width: 50px;
+        }
+
+        .vector-values {
+            display: flex;
+            gap: 4px;
+        }
+
+        .cell {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            font-weight: bold;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .cell.active {
+            background-color: var(--primary-light);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* 워드 임베딩 시각화 (좌표 공간) */
+        .embedding-space {
+            position: relative;
+            height: 140px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .coord-dot {
+            position: absolute;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .feature-desc {
+            font-size: 0.85rem;
+            color: var(--text-main);
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #cbd5e1;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>인공지능의 텍스트 데이터 인식 방식</h1>
+            <p>기계가 글자를 이해할 수 있도록 숫자로 변환하는 대표적인 두 가지 방법</p>
+        </header>
+
+        <!-- 핵심 요약 카드 -->
+        <div class="main-card">
+            <h2>핵심 원리</h2>
+            <div class="highlight-box">
+                텍스트 데이터 ➔ <strong>숫자</strong>로 변환하여 인식
+            </div>
+        </div>
+
+        <!-- 비교 그리드 -->
+        <div class="comparison-grid">
+            
+            <!-- 1. 원-핫 인코딩 -->
+            <div class="method-card one-hot">
+                <div class="method-header">
+                    <h3>🏷️ 원-핫 인코딩 (One-Hot Encoding)</h3>
+                    <p>단어를 나타내는 고정 길이 벡터에서 해당 단어만 1로 표현하고 나머지는 0으로 표현하는 방법</p>
+                </div>
+                
+                <div class="visual-demo">
+                    <div class="visual-title">예시: [사과, 바나나, 포도] 벡터 표현</div>
+                    
+                    <div class="vector-row">
+                        <span class="vector-label">사과</span>
+                        <div class="vector-values">
+                            <div class="cell active">1</div>
+                            <div class="cell">0</div>
+                            <div class="cell">0</div>
+                        </div>
+                    </div>
+                    <div class="vector-row">
+                        <span class="vector-label">바나나</span>
+                        <div class="vector-values">
+                            <div class="cell">0</div>
+                            <div class="cell active">1</div>
+                            <div class="cell">0</div>
+                        </div>
+                    </div>
+                    <div class="vector-row">
+                        <span class="vector-label">포도</span>
+                        <div class="vector-values">
+                            <div class="cell">0</div>
+                            <div class="cell">0</div>
+                            <div class="cell active">1</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-desc" style="border-left-color: var(--primary-color);">
+                    <strong>특징:</strong> 직관적이지만 단어 종류가 늘어날수록 빈 공간(0)이 과도하게 커지는 단점이 있습니다.
+                </div>
+            </div>
+
+            <!-- 2. 워드 임베딩 -->
+            <div class="method-card embedding">
+                <div class="method-header">
+                    <h3>📍 워드 임베딩 (Word Embedding)</h3>
+                    <p>학습을 통해 단어를 저차원의 실수값으로 변환하여 단어 간의 관계와 의미를 파악할 수 있도록 하는 방법</p>
+                </div>
+                
+                <div class="visual-demo">
+                    <div class="visual-title">예시: 의미 공간(좌표)상의 단어 배치</div>
+                    
+                    <div class="embedding-space">
+                        <!-- 가상의 좌표 위치 지정 -->
+                        <div class="coord-dot" style="top: 30px; left: 40px; background-color: #0284c7;">사과 [0.2, 0.8]</div>
+                        <div class="coord-dot" style="top: 45px; left: 110px; background-color: #0284c7;">바나나 [0.4, 0.7]</div>
+                        <div class="coord-dot" style="top: 100px; left: 220px; background-color: #0d9488;">자동차 [0.9, 0.2]</div>
+                    </div>
+                </div>
+
+                <div class="feature-desc" style="border-left-color: var(--secondary-color);">
+                    <strong>특징:</strong> 의미가 비슷한 단어(예: 사과와 바나나)끼리 가까운 공간에 위치하여 단어 간의 관계와 의미를 학습합니다.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

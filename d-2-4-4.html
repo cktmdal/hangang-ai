@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>생성형 언어 모델의 문장 생성 원리 (패턴 예시)</title>
+    <style>
+        :root {
+            --primary-color: #8b5cf6;
+            --primary-light: #ede9fe;
+            --accent-color: #06b6d4;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --border-color: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--text-sub);
+            font-size: 1.05rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 8px;
+        }
+
+        /* 단어 카드 목록 */
+        .word-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .word-badge {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            border: 1px solid #ddd6fe;
+        }
+
+        /* 시뮬레이터 박스 */
+        .simulator-box {
+            background-color: #f1f5f9;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        select {
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: white;
+            color: var(--text-main);
+            outline: none;
+            cursor: pointer;
+        }
+
+        select:focus {
+            border-color: var(--primary-color);
+        }
+
+        .predict-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .predict-btn:hover {
+            background-color: #7c3aed;
+        }
+
+        /* 확률 결과 영역 */
+        .result-area {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .result-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--text-sub);
+            margin-bottom: 12px;
+        }
+
+        .prob-bar-container {
+            margin-bottom: 12px;
+        }
+
+        .prob-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .bar-bg {
+            background-color: #e2e8f0;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background-color: var(--accent-color);
+            border-radius: 6px;
+            width: 0%;
+            transition: width 0.6s ease-in-out;
+        }
+
+        .selected-sentence {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #ecfeff;
+            border: 1px dashed var(--accent-color);
+            border-radius: 6px;
+            font-weight: bold;
+            color: #0e7490;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>생성형 언어 모델(GLM)의 패턴 학습</h1>
+            <p>제시된 단어 조합을 통해 인공지능이 다음에 올 단어를 확률적으로 예측하는 과정을 실습해 보세요.</p>
+        </header>
+
+        <!-- 1. 단어 풀 안내 카드 -->
+        <div class="card">
+            <h2>🏷️ 학습에 사용된 단어 목록</h2>
+            <p style="margin-bottom: 15px;">명사(대상)와 동사(행동) 그룹의 단어들입니다.</p>
+            <div class="word-pool">
+                <span class="word-badge">밥</span>
+                <span class="word-badge">버스</span>
+                <span class="word-badge">커피</span>
+                <span class="word-badge">먹다</span>
+                <span class="word-badge">타다</span>
+                <span class="word-badge">마시다</span>
+            </div>
+        </div>
+
+        <!-- 2. 확률 예측 시뮬레이터 -->
+        <div class="card">
+            <h2>📊 빈도수 및 패턴 기반 확률 예측 시뮬레이터</h2>
+            <p style="margin-bottom: 20px;">앞에 나온 단어를 선택하면, 인공지능이 학습한 패턴을 바탕으로 다음에 올 단어의 확률을 예측합니다.</p>
+
+            <div class="simulator-box">
+                <div class="input-group">
+                    <label for="wordSelect"><strong>첫 번째 단어 선택:</strong></label>
+                    <select id="wordSelect">
+                        <option value="밥">밥</option>
+                        <option value="버스">버스</option>
+                        <option value="커피">커피</option>
+                    </select>
+                    <button class="predict-btn" onclick="calculateProbability()">다음 단어 예측하기</button>
+                </div>
+
+                <div class="result-area">
+                    <div class="result-title">🎯 다음 등장 확률 예측 결과</div>
+                    
+                    <div class="prob-bar-container">
+                        <div class="prob-info">
+                            <span id="target1">먹다</span>
+                            <span id="pct1">0%</span>
+                        </div>
+                        <div class="bar-bg"><div id="fill1" class="bar-fill"></div></div>
+                    </div>
+
+                    <div class="prob-bar-container">
+                        <div class="prob-info">
+                            <span id="target2">마시다</span>
+                            <span id="pct2">0%</span>
+                        </div>
+                        <div class="bar-bg"><div id="fill2" class="bar-fill"></div></div>
+                    </div>
+
+                    <div class="prob-bar-container">
+                        <div class="prob-info">
+                            <span id="target3">타다</span>
+                            <span id="pct3">0%</span>
+                        </div>
+                        <div class="bar-bg"><div id="fill3" class="bar-fill"></div></div>
+                    </div>
+
+                    <div id="sentenceResult" class="selected-sentence">
+                        단어를 선택하고 예측 버튼을 눌러보세요!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 단어별 패턴 확률 데이터베이스 (예시)
+        const patternData = {
+            "밥": {
+                choices: [
+                    { word: "먹다", prob: 90 },
+                    { word: "마시다", prob: 8 },
+                    { word: "타다", prob: 2 }
+                ],
+                sentence: "생성형 언어 모델의 확률적 선택: '밥' 다음에는 '먹다'가 나올 확률이 가장 높습니다! (생성된 문장: 밥을 먹다)"
+            },
+            "버스": {
+                choices: [
+                    { word: "타다", prob: 92 },
+                    { word: "먹다", prob: 5 },
+                    { word: "마시다", prob: 3 }
+                ],
+                sentence: "생성형 언어 모델의 확률적 선택: '버스' 다음에는 '타다'가 나올 확률이 가장 높습니다! (생성된 문장: 버스를 타다)"
+            },
+            "커피": {
+                choices: [
+                    { word: "마시다", prob: 88 },
+                    { word: "먹다", prob: 10 },
+                    { word: "타다", prob: 2 }
+                ],
+                sentence: "생성형 언어 모델의 확률적 선택: '커피' 다음에는 '마시다'가 나올 확률이 가장 높습니다! (생성된 문장: 커피를 마시다)"
+            }
+        };
+
+        function calculateProbability() {
+            const selectedWord = document.getElementById('wordSelect').value;
+            const data = patternData[selectedWord];
+
+            // 바 1
+            document.getElementById('target1').innerText = data.choices[0].word;
+            document.getElementById('pct1').innerText = data.choices[0].prob + '%';
+            document.getElementById('fill1').style.width = data.choices[0].prob + '%';
+
+            // 바 2
+            document.getElementById('target2').innerText = data.choices[1].word;
+            document.getElementById('pct2').innerText = data.choices[1].prob + '%';
+            document.getElementById('fill2').style.width = data.choices[1].prob + '%';
+
+            // 바 3
+            document.getElementById('target3').innerText = data.choices[2].word;
+            document.getElementById('pct3').innerText = data.choices[2].prob + '%';
+            document.getElementById('fill3').style.width = data.choices[2].prob + '%';
+
+            // 문장 결과 출력
+            document.getElementById('sentenceResult').innerText = data.sentence;
+        }
+
+        // 페이지 로드 시 기본 실행
+        window.onload = function() {
+            calculateProbability();
+        }
+    </script>
+</body>
+</html>

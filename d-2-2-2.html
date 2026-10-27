@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNN 맥스 풀링층 연산 시각화</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        p.description {
+            color: #666;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .section h3 {
+            margin-top: 0;
+            color: #34495e;
+        }
+
+        .grid {
+            display: grid;
+            gap: 4px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        /* 입력 특징 맵 그리드 (4x4) */
+        #input-grid {
+            grid-template-columns: repeat(4, 45px);
+        }
+
+        /* 출력 풀링 맵 그리드 (2x2) */
+        #output-grid {
+            grid-template-columns: repeat(2, 45px);
+        }
+
+        .cell {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            font-weight: bold;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        /* 상태별 셀 스타일 */
+        .cell.highlight {
+            background-color: #ffeaa7;
+            border-color: #f39c12;
+            transform: scale(1.05);
+        }
+
+        /* 풀링 영역 내에서 최댓값인 셀 강조 */
+        .cell.max-val {
+            background-color: #ff7675;
+            border-color: #d63031;
+            color: white;
+        }
+
+        .cell.calculated {
+            background-color: #d4efdf;
+            border-color: #27ae60;
+            color: #145a32;
+        }
+
+        /* 연산 상세 과정 패널 스타일 */
+        .calculation-process {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 530px;
+            margin-top: 25px;
+            box-sizing: border-box;
+        }
+
+        .calculation-process h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            font-size: 18px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 8px;
+        }
+
+        #calc-formula {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #34495e;
+            word-break: break-all;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 530px;
+            box-sizing: border-box;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .step-info {
+            font-weight: bold;
+            color: #e67e22;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>CNN 맥스 풀링층(Max Pooling) 연산 시각화</h1>
+    <p class="description">입력 특징 맵(4×4) 위를 2×2 윈도우가 스트라이드 2로 이동하며 가장 큰(Max) 값을 추출해 출력 맵(2×2)을 만드는 과정입니다.</p>
+
+    <div class="container">
+        <!-- 1. 입력 특징 맵 -->
+        <div class="section">
+            <h3>1. 입력 특징 맵 (4×4)</h3>
+            <div id="input-grid" class="grid"></div>
+        </div>
+
+        <!-- 2. 출력 풀링 맵 -->
+        <div class="section">
+            <h3>2. 출력 풀링 맵 (2×2)</h3>
+            <div id="output-grid" class="grid"></div>
+        </div>
+    </div>
+
+    <!-- 연산 과정 상세 보기 패널 -->
+    <div class="calculation-process">
+        <h3>🔍 현재 단계 연산 과정</h3>
+        <div id="calc-formula">단계를 선택하면 상세 연산 과정이 표시됩니다.</div>
+    </div>
+
+    <!-- 컨트롤 패널 -->
+    <div class="controls">
+        <div>현재 단계: <span id="step-text" class="step-info">0 / 4 단계</span></div>
+        <input type="range" id="step-slider" min="0" max="4" value="0">
+        <div class="btn-group">
+            <button id="prev-btn">이전</button>
+            <button id="next-btn">다음</button>
+            <button id="auto-btn">자동 재생</button>
+        </div>
+    </div>
+
+    <script>
+        // 4x4 입력 데이터 정의 (스트라이드 2이므로 2x2 영역이 총 4번 이동함)
+        const inputData = [
+            [3, 1, 2, 4],
+            [5, 8, 0, 1],
+            [1, 2, 6, 3],
+            [0, 4, 2, 7]
+        ];
+
+        // 2x2 출력을 위한 총 4개 위치 (r, c는 2칸씩 뜀: 0, 2)
+        const steps = [
+            {r: 0, c: 0, outR: 0, outC: 0}, 
+            {r: 0, c: 2, outR: 0, outC: 1},
+            {r: 2, c: 0, outR: 1, outC: 0}, 
+            {r: 2, c: 2, outR: 1, outC: 1}
+        ];
+
+        let currentStep = 0;
+        let isAutoPlaying = false;
+        let autoTimer = null;
+
+        // DOM 요소 가져오기
+        const inputGridEl = document.getElementById('input-grid');
+        const outputGridEl = document.getElementById('output-grid');
+        const stepSlider = document.getElementById('step-slider');
+        const stepText = document.getElementById('step-text');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const autoBtn = document.getElementById('auto-btn');
+        const calcFormulaEl = document.getElementById('calc-formula');
+
+        // 초기 그리드 생성
+        function initGrids() {
+            // 입력 그리드 (4x4)
+            inputGridEl.innerHTML = '';
+            for (let r = 0; r < 4; r++) {
+                for (let c = 0; c < 4; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.id = `in-${r}-${c}`;
+                    cell.textContent = inputData[r][c];
+                    inputGridEl.appendChild(cell);
+                }
+            }
+
+            // 출력 그리드 (2x2)
+            outputGridEl.innerHTML = '';
+            for (let r = 0; r < 2; r++) {
+                for (let c = 0; c < 2; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.id = `out-${r}-${c}`;
+                    cell.textContent = '';
+                    outputGridEl.appendChild(cell);
+                }
+            }
+        }
+
+        // 특정 단계의 연산 수행 및 화면 업데이트
+        function updateView(step) {
+            currentStep = step;
+            stepSlider.value = step;
+            stepText.textContent = `${step} / 4 단계`;
+
+            // 모든 입력 셀 스타일 초기화
+            for (let r = 0; r < 4; r++) {
+                for (let c = 0; c < 4; c++) {
+                    const cell = document.getElementById(`in-${r}-${c}`);
+                    cell.classList.remove('highlight', 'max-val');
+                }
+            }
+
+            // 모든 출력 셀 초기화 후 채우기
+            for (let i = 0; i < 4; i++) {
+                const pos = steps[i];
+                const outCell = document.getElementById(`out-${pos.outR}-${pos.outC}`);
+                
+                if (i < step) {
+                    outCell.textContent = calculateMaxValue(pos.r, pos.c);
+                    outCell.classList.add('calculated');
+                } else {
+                    outCell.textContent = '';
+                    outCell.classList.remove('calculated');
+                }
+            }
+
+            // 현재 단계가 유효 범위(1~4)일 경우 현재 윈도우 영역 강조 및 최댓값 표시
+            if (step > 0 && step <= 4) {
+                const currentPos = steps[step - 1];
+                let values = [];
+                let maxVal = -Infinity;
+                let maxCoord = {r: -1, c: -1};
+
+                // 2x2 윈도우 순회
+                for (let dr = 0; dr < 2; dr++) {
+                    for (let dc = 0; dc < 2; dc++) {
+                        const targetR = currentPos.r + dr;
+                        const targetC = currentPos.c + dc;
+                        const val = inputData[targetR][targetC];
+                        values.push(val);
+
+                        // 하이라이트 부여
+                        document.getElementById(`in-${targetR}-${targetC}`).classList.add('highlight');
+
+                        if (val > maxVal) {
+                            maxVal = val;
+                            maxCoord = {r: targetR, c: targetC};
+                        }
+                    }
+                }
+
+                // 최댓값 셀에 특별 강조 표시
+                document.getElementById(`in-${maxCoord.r}-${maxCoord.c}`).classList.remove('highlight');
+                document.getElementById(`in-${maxCoord.r}-${maxCoord.c}`).classList.add('max-val');
+
+                // 상세 과정 안내문 출력
+                calcFormulaEl.innerHTML = `
+                    <b>출력 위치 [${currentPos.outR}, ${currentPos.outC}] 영역 ([${currentPos.r}~${currentPos.r+1}, ${currentPos.c}~${currentPos.c+1}]):</b><br>
+                    비교 대상 값들: [${values.join(', ')}]<br>
+                    가장 큰 값(Max): <b>${maxVal}</b> 선택됨 (빨간색 표시)
+                `;
+            } else {
+                calcFormulaEl.innerHTML = `시작 전 상태입니다. '다음' 버튼이나 슬라이더를 움직여 연산을 시작하세요.`;
+            }
+        }
+
+        // 특정 2x2 영역에서의 Max Pooling 결과값 계산 함수
+        function calculateMaxValue(startR, startC) {
+            let maxVal = -Infinity;
+            for (let dr = 0; dr < 2; dr++) {
+                for (let dc = 0; dc < 2; dc++) {
+                    const val = inputData[startR + dr][startC + dc];
+                    if (val > maxVal) maxVal = val;
+                }
+            }
+            return maxVal;
+        }
+
+        // 이벤트 리스너 설정
+        stepSlider.addEventListener('input', (e) => {
+            stopAutoPlay();
+            updateView(parseInt(e.target.value));
+        });
+
+        nextBtn.addEventListener('click', () => {
+            stopAutoPlay();
+            if (currentStep < 4) {
+                updateView(currentStep + 1);
+            } else {
+                updateView(0); // 끝에 도달하면 처음으로 루프
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            stopAutoPlay();
+            if (currentStep > 0) {
+                updateView(currentStep - 1);
+            }
+        });
+
+        autoBtn.addEventListener('click', () => {
+            if (isAutoPlaying) {
+                stopAutoPlay();
+            } else {
+                startAutoPlay();
+            }
+        });
+
+        function startAutoPlay() {
+            isAutoPlaying = true;
+            autoBtn.textContent = '정지';
+            autoBtn.style.backgroundColor = '#e74c3c';
+            if (currentStep >= 4) currentStep = 0;
+            
+            autoTimer = setInterval(() => {
+                if (currentStep < 4) {
+                    updateView(currentStep + 1);
+                } else {
+                    stopAutoPlay();
+                }
+            }, 1000); // 1초마다 단계 진행
+        }
+
+        function stopAutoPlay() {
+            isAutoPlaying = false;
+            autoBtn.textContent = '자동 재생';
+            autoBtn.style.backgroundColor = '#3498db';
+            clearInterval(autoTimer);
+        }
+
+        // 초기화 실행
+        initGrids();
+        updateView(0);
+    </script>
+</body>
+</html>
