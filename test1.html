@@ -82,6 +82,8 @@
             text-align: center;
             font-size: 16px;
         }
+        .hide{display:none;}
+        .abbr > td:hover .hide{display:block; position:absolute; top:0; left:0;}
     </style>
 </head>
 <body>
@@ -113,15 +115,15 @@
                 <th>예측값: T</th>
                 <th>예측값: F</th>
             </tr>
-            <tr>
+            <tr class="abbr">
                 <th>실제값: T</th>
-                <td placeholder="참으로 예측.실제참"><input type="number" id="matrix-tt" placeholder="TP"></td>
-                <td><input type="number" id="matrix-tf" placeholder="FN"></td>
+                <td><input type="number" id="matrix-tt" placeholder="TP"><span class="hide">참으로 예측, 실제참</span></td>
+                <td><input type="number" id="matrix-tf" placeholder="FN"><span class="hide">거짓으로 예측, 실제참</span></td>
             </tr>
             <tr>
                 <th>실제값: F</th>
-                <td><input type="number" id="matrix-ft" placeholder="FP"></td>
-                <td><input type="number" id="matrix-ff" placeholder="TN"></td>
+                <td><input type="number" id="matrix-ft" placeholder="FP"><span class="hide">참으로 예측, 실제거짓</span></td>
+                <td><input type="number" id="matrix-ff" placeholder="TN"><span class="hide">거짓으로 예측, 실제거짓</span></td>
             </tr>
         </table>
     </div>
