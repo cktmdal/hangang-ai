@@ -82,10 +82,7 @@
             text-align: center;
             font-size: 16px;
         }
-        .abbr > td{position:relative; height:50px}
-        .hide{display:none;}
-        
-        .abbr > td:hover .hide{display:block; position:absolute; top:5px; left:5px;background:yellow; padding:3px;  }
+     
     </style>
 </head>
 <body>
@@ -120,12 +117,12 @@
             <tr class="abbr">
                 <th>실제값: T</th>
                 <td><abbr title="참으로 예측, 실제참"><input type="number" id="matrix-tt" placeholder="TP"></abbr></td>
-                <td><input type="number" id="matrix-tf" placeholder="FN"><span class="hide">거짓으로 예측, 실제참</span></td>
+                <td><abbr title="거짓으로 예측, 실제참"><input type="number" id="matrix-tf" placeholder="FN"></abbr></td>
             </tr>
             <tr class="abbr">
                 <th>실제값: F</th>
-                <td><input type="number" id="matrix-ft" placeholder="FP"><span class="hide">참으로 예측, 실제거짓</span></td>
-                <td><input type="number" id="matrix-ff" placeholder="TN"><span class="hide">거짓으로 예측, 실제거짓</span></td>
+                <td><abbr title="참으로 예측, 실제거짓"><input type="number" id="matrix-ft" placeholder="FP"></abbr></td>
+                <td><abbr title="거짓으로 예측, 실제거짓"><input type="number" id="matrix-ff" placeholder="TN"></abbr></td>
             </tr>
         </table>
     </div>
