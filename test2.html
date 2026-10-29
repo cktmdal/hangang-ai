@@ -105,7 +105,7 @@
         </table>
     </div>
 
-    <div class="card">
+     <div class="card">
         <h3>혼동 행렬 (Confusion Matrix) 완성</h3>
         <table class="matrix-table">
             <tr>
@@ -113,15 +113,15 @@
                 <th>예측값: T</th>
                 <th>예측값: F</th>
             </tr>
-            <tr>
+            <tr >
                 <th>실제값: T</th>
-                <td><input type="number" id="matrix-tt" placeholder="TP"></td>
-                <td><input type="number" id="matrix-tf" placeholder="FN"></td>
+                <td><abbr title="참으로 예측, 실제참"><input type="number" id="matrix-tt" placeholder="TP"></abbr></td>
+                <td><abbr title="거짓으로 예측, 실제참"><input type="number" id="matrix-tf" placeholder="FN"></abbr></td>
             </tr>
-            <tr>
+            <tr >
                 <th>실제값: F</th>
-                <td><input type="number" id="matrix-ft" placeholder="FP"></td>
-                <td><input type="number" id="matrix-ff" placeholder="TN"></td>
+                <td><abbr title="참으로 예측, 실제거짓"><input type="number" id="matrix-ft" placeholder="FP"></abbr></td>
+                <td><abbr title="거짓으로 예측, 실제거짓"><input type="number" id="matrix-ff" placeholder="TN"></abbr></td>
             </tr>
         </table>
     </div>
